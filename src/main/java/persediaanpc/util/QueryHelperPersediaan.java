@@ -108,9 +108,13 @@ public class QueryHelperPersediaan {
         String tmp="SELECT det.*\n" +
 "FROM\n" +
 "(SELECT \n" +
-"p_tb_mutasi_det_real.*,\n" +
+"p_tb_mutasi_det_real.id_det_mutasi_real,\n" +
+"p_tb_mutasi_det_real.id_mutasi,\n" +
+"p_tb_mutasi_det_real.id_item,\n" +
 "p_tb_item.nm_item,\n" +
+"p_tb_mutasi_det_real.real_qty,\n" +
 "p_tb_item.satuan,\n" +
+"p_tb_mutasi_det_real.real_harga_penerimaan,\n" +
 "(p_tb_mutasi_det_real.real_qty*p_tb_mutasi_det_real.real_harga_penerimaan) subtotal\n" +
 "FROM p_tb_mutasi_det_real JOIN p_tb_item\n" +
 "ON p_tb_mutasi_det_real.id_item=p_tb_item.id_item) AS det\n" +
@@ -118,4 +122,55 @@ public class QueryHelperPersediaan {
         
         return tmp.replace("[id_mutasi]", idMutasi);
     }
+    
+    public static String qDetRealUnApproved="SELECT p_tb_mutasi_det_real.id_det_mutasi_real, p_tb_mutasi_det_real.id_mutasi, p_tb_mutasi_det_real.id_item, p_tb_mutasi_det_real.real_qty, p_tb_mutasi_det_real.real_harga_penerimaan, p_tb_mutasi.tgl_mutasi FROM bmd.p_tb_mutasi AS p_tb_mutasi, bmd.p_tb_mutasi_det_real AS p_tb_mutasi_det_real WHERE p_tb_mutasi.id_mutasi = p_tb_mutasi_det_real.id_mutasi AND p_tb_mutasi.approved = '0' ORDER BY p_tb_mutasi.tgl_mutasi ASC";
+    
+    public static String qDetRealUnApprovedGrouped="SELECT\n" +
+"det.id_mutasi\n" +
+"FROM\n" +
+"(SELECT p_tb_mutasi_det_real.id_det_mutasi_real, p_tb_mutasi_det_real.id_mutasi, p_tb_mutasi_det_real.id_item, p_tb_mutasi_det_real.real_qty, p_tb_mutasi_det_real.real_harga_penerimaan, p_tb_mutasi.tgl_mutasi FROM bmd.p_tb_mutasi AS p_tb_mutasi, bmd.p_tb_mutasi_det_real AS p_tb_mutasi_det_real WHERE p_tb_mutasi.id_mutasi = p_tb_mutasi_det_real.id_mutasi AND p_tb_mutasi.approved = '0' ORDER BY p_tb_mutasi.tgl_mutasi ASC) AS det\n" +
+"GROUP BY id_mutasi";
+    
+    public static String qDelDetRealFromDate(String date){
+        String tmp="DELETE p_tb_mutasi_det_buku \n" +
+"FROM p_tb_mutasi_det_buku INNER JOIN p_tb_mutasi\n" +
+"ON p_tb_mutasi_det_buku.id_mutasi=p_tb_mutasi.id_mutasi\n" +
+"WHERE tgl_mutasi>='[date]'";
+        return tmp.replace("[date]", date);
+    }
+    
+    public static String qResetApprovalFromDate(String date){
+        String tmp="UPDATE p_tb_mutasi SET approved='0' WHERE tgl_mutasi>='[date]'";
+        return tmp.replace("[date]", date);
+    }
+    
+    public static String qDetRealUnApprovedDebit="SELECT p_tb_mutasi_det_real.id_det_mutasi_real, p_tb_mutasi_det_real.id_mutasi, p_tb_mutasi_det_real.id_item, p_tb_mutasi_det_real.real_qty, p_tb_mutasi_det_real.real_harga_penerimaan, p_tb_mutasi.tgl_mutasi FROM bmd.p_tb_mutasi AS p_tb_mutasi, bmd.p_tb_mutasi_det_real AS p_tb_mutasi_det_real, bmd.p_ref_jenis_mutasi AS p_ref_jenis_mutasi WHERE p_tb_mutasi.id_mutasi = p_tb_mutasi_det_real.id_mutasi AND p_ref_jenis_mutasi.id_jenis_mutasi = p_tb_mutasi.id_jenis_mutasi AND p_tb_mutasi.approved = '0' AND p_ref_jenis_mutasi.debit = '1' ORDER BY p_tb_mutasi.tgl_mutasi ASC";
+    
+    public static String qDetRealUnApprovedKredit="SELECT p_tb_mutasi_det_real.id_det_mutasi_real, p_tb_mutasi_det_real.id_mutasi, p_tb_mutasi_det_real.id_item, p_tb_mutasi_det_real.real_qty, p_tb_mutasi_det_real.real_harga_penerimaan, p_tb_mutasi.tgl_mutasi FROM bmd.p_tb_mutasi AS p_tb_mutasi, bmd.p_tb_mutasi_det_real AS p_tb_mutasi_det_real, bmd.p_ref_jenis_mutasi AS p_ref_jenis_mutasi WHERE p_tb_mutasi.id_mutasi = p_tb_mutasi_det_real.id_mutasi AND p_ref_jenis_mutasi.id_jenis_mutasi = p_tb_mutasi.id_jenis_mutasi AND p_tb_mutasi.approved = '0' AND p_ref_jenis_mutasi.debit = '0' ORDER BY p_tb_mutasi.tgl_mutasi ASC";
+    
+    public static String qItemStockNotZero(String beforeDate, String idItem){
+        String tmp="SELECT\n" +
+"p_tb_subitem.*,\n" +
+"look.stok\n" +
+"FROM p_tb_subitem\n" +
+"JOIN\n" +
+"(SELECT\n" +
+"stokitem.id_subitem,\n" +
+"stokitem.stok_akhir AS stok\n" +
+"FROM\n" +
+"(SELECT \n" +
+"p_tb_mutasi_det_buku.*,\n" +
+"p_tb_mutasi.tgl_mutasi\n" +
+"FROM p_tb_mutasi_det_buku JOIN p_tb_mutasi\n" +
+"ON p_tb_mutasi_det_buku.id_mutasi=p_tb_mutasi.id_mutasi\n" +
+"WHERE tgl_mutasi<'[beforeDate]' AND stok_akhir>'0'\n" +
+"ORDER BY tgl_mutasi DESC) AS stokitem\n" +
+"GROUP BY id_subitem) AS look\n" +
+"ON p_tb_subitem.id_subitem=look.id_subitem\n" +
+"WHERE id_item='[idItem]'\n" +
+"ORDER BY id_item ASC, wkt_masuk_item ASC";
+        return tmp.replace("[beforeDate]", beforeDate).replace("[idItem]", idItem);
+    }
+            
+    
 }

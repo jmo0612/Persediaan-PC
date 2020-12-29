@@ -6,6 +6,7 @@
 package persediaanpc;
 
 import com.thowo.jmpcframework.component.JMPCForm;
+import persediaanpc.util.MutasiBuku;
 
 /**
  *
@@ -36,7 +37,7 @@ public class FormMain extends JMPCForm{
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(null));
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jButton1.setText("Barang Masuk");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -48,6 +49,11 @@ public class FormMain extends JMPCForm{
         jButton2.setText("Barang Keluar");
 
         jButton3.setText("Laporan");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -97,6 +103,11 @@ public class FormMain extends JMPCForm{
         // TODO add your handling code here:
         new FormMenuM(this,true).setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        MutasiBuku.create();
+    }//GEN-LAST:event_jButton3ActionPerformed
 
     /**
      * @param args the command line arguments

@@ -88,20 +88,20 @@ public class InputPengadaanDetail implements JMFormInterface {
         this.fIdDetMutasiReal=JMPCInputStringTFWeblaf.create(R.label("ID_DET_MUTASI_REAL"),R.label("PROMPT_ID_DET_MUTASI_REAL"), 20, width, horizontal).setEditable(false);
         this.fIdMutasi=JMPCInputStringTFWeblaf.create(R.label("ID_MUTASI"),R.label("PROMPT_ID_MUTASI"), 20, width, horizontal).setEditable(false);
         this.fIdItem=JMPCInputStringTFWeblaf.create(R.label("ID_ITEM"),R.label("PROMPT_ID_ITEM"), 20, width, horizontal).setEditable(false);
-        this.fRealQty=JMPCInputStringTFWeblaf.create(R.label("REAL_QTY"),R.label("PROMPT_REAL_QTY"), 20, width, horizontal).setEditable(false);
-        this.fRealHargaPenerimaan=JMPCInputStringTFWeblaf.create(R.label("REAL_HARGA_PENERIMAAN"),R.label("PROMPT_REAL_HARGA_PENERIMAAN"), 20, width, horizontal).setEditable(false);
         this.fNmItem=JMPCInputStringTFWeblaf.create(R.label("NM_ITEM"),R.label("PROMPT_NM_ITEM"), 20, width, horizontal).setEditable(false);
+        this.fRealQty=JMPCInputStringTFWeblaf.create(R.label("REAL_QTY"),R.label("PROMPT_REAL_QTY"), 20, width, horizontal).setEditable(false);
         this.fSatuan=JMPCInputStringTFWeblaf.create(R.label("SATUAN"),R.label("PROMPT_SATUAN"), 20, width, horizontal).setEditable(false);
+        this.fRealHargaPenerimaan=JMPCInputStringTFWeblaf.create(R.label("REAL_HARGA_PENERIMAAN"),R.label("PROMPT_REAL_HARGA_PENERIMAAN"), 20, width, horizontal).setEditable(false);
         this.fSubtotal=JMPCInputStringTFWeblaf.create(R.label("SUBTOTAL"),R.label("PROMPT_SUBTOTAL"), 20, width, horizontal).setEditable(false);
 
         
         this.table.setFormInterface(this.fIdDetMutasiReal, 0,true);
         this.table.setFormInterface(this.fIdMutasi, 1,true);
         this.table.setFormInterface(this.fIdItem, 2,true);
-        this.table.setFormInterface(this.fRealQty, 3,true);
-        this.table.setFormInterface(this.fRealHargaPenerimaan, 4,true);
-        this.table.setFormInterface(this.fNmItem, 5,true);
-        this.table.setFormInterface(this.fSatuan, 6,true);
+        this.table.setFormInterface(this.fNmItem, 3,true);
+        this.table.setFormInterface(this.fRealQty, 4,true);
+        this.table.setFormInterface(this.fSatuan, 5,true);
+        this.table.setFormInterface(this.fRealHargaPenerimaan, 6,true);
         this.table.setFormInterface(this.fSubtotal, 7,true);
 
 
@@ -113,20 +113,20 @@ public class InputPengadaanDetail implements JMFormInterface {
         box.add(this.fIdDetMutasiReal);
         box.add(this.fIdMutasi);
         box.add(this.fIdItem);
-        box.add(this.fRealQty);
-        box.add(this.fRealHargaPenerimaan);
         box.add(this.fNmItem);
+        box.add(this.fRealQty);
         box.add(this.fSatuan);
+        box.add(this.fRealHargaPenerimaan);
         box.add(this.fSubtotal);
 
 
         this.fIdDetMutasiReal.setVisible(false);
         this.fIdMutasi.setVisible(false);
         this.fIdItem.setVisible(false);
-        //this.fRealQty.setVisible(false);
-        //this.fRealHargaPenerimaan.setVisible(false);
         //this.fNmItem.setVisible(false);
+        //this.fRealQty.setVisible(false);
         //this.fSatuan.setVisible(false);
+        //this.fRealHargaPenerimaan.setVisible(false);
         this.fSubtotal.setVisible(false);
 
 
@@ -166,10 +166,10 @@ public class InputPengadaanDetail implements JMFormInterface {
         this.fIdDetMutasiReal.setEditMode(editMode,this.row,0);
         this.fIdMutasi.setEditMode(editMode,this.row,1);
         this.fIdItem.setEditMode(editMode,this.row,2);
-        this.fRealQty.setEditMode(editMode,this.row,3);
-        this.fRealHargaPenerimaan.setEditMode(editMode,this.row,4);
-        this.fNmItem.setEditMode(editMode,this.row,5);
-        this.fSatuan.setEditMode(editMode,this.row,6);
+        this.fNmItem.setEditMode(editMode,this.row,3);
+        this.fRealQty.setEditMode(editMode,this.row,4);
+        this.fSatuan.setEditMode(editMode,this.row,5);
+        this.fRealHargaPenerimaan.setEditMode(editMode,this.row,6);
         this.fSubtotal.setEditMode(editMode,this.row,7);
 
 
