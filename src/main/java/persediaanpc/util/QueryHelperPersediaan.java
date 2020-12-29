@@ -103,4 +103,19 @@ public class QueryHelperPersediaan {
 "WHERE debit='1') AS det\n" +
 "GROUP BY id_mutasi\n" +
 "ORDER BY tgl_mutasi asc";
+    
+    public static String qDetailPengadaan(String idMutasi){
+        String tmp="SELECT det.*\n" +
+"FROM\n" +
+"(SELECT \n" +
+"p_tb_mutasi_det_real.*,\n" +
+"p_tb_item.nm_item,\n" +
+"p_tb_item.satuan,\n" +
+"(p_tb_mutasi_det_real.real_qty*p_tb_mutasi_det_real.real_harga_penerimaan) subtotal\n" +
+"FROM p_tb_mutasi_det_real JOIN p_tb_item\n" +
+"ON p_tb_mutasi_det_real.id_item=p_tb_item.id_item) AS det\n" +
+"WHERE det.id_mutasi='[id_mutasi]'";
+        
+        return tmp.replace("[id_mutasi]", idMutasi);
+    }
 }

@@ -21,8 +21,9 @@ import java.awt.event.WindowListener;
 import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
-import persediaanpc.FormInput;
+import persediaanpc.FormDetail;
 import persediaanpc.FormTable;
+import persediaanpc.util.QueryHelperPersediaan;
 /**
  *
  * @author jimi
@@ -30,7 +31,7 @@ import persediaanpc.FormTable;
 public class InputPengadaan implements JMFormInterface {
     private final String title=R.label("TITLE_OPD");
     private final JMTable table;
-    private final FormInput form;
+    private final FormDetail form;
     private final FormTable parent;
     
     private JMPCInputStringTFWeblaf fIdMutasi;
@@ -69,6 +70,8 @@ public class InputPengadaan implements JMFormInterface {
     private boolean editMode=false;
     private boolean formClosing=false;
     
+    TablePengadaanDetail detPengadaan;
+    
     public static InputPengadaan create(JMTable table,FormTable parent,boolean editing,boolean adding){
         return new InputPengadaan(table,parent,editing,adding);
     }
@@ -76,7 +79,7 @@ public class InputPengadaan implements JMFormInterface {
     public InputPengadaan(JMTable table,FormTable parent,boolean editing,boolean adding){
         
         this.parent=parent;
-        this.form=new FormInput(null,true);
+        this.form=new FormDetail(null,true);
         this.form.setTitle(this.title);
         this.table=table;
         this.table.addInterface(this);
@@ -248,7 +251,14 @@ public class InputPengadaan implements JMFormInterface {
         this.btnGroup.getBtnView().setVisible(false);
         
         
+        this.refreshDetail();
+        
         form.setVisible(true);
+    }
+    
+    private void refreshDetail(){
+        //JMFunctions.trace(QueryHelperPersediaan.qDetailPengadaan(this.row.getCells().get(0).getDBValue()));
+        this.detPengadaan=TablePengadaanDetail.create(QueryHelperPersediaan.qDetailPengadaan(this.row.getCells().get(0).getDBValue()), this);
     }
     
     private void lockAccess(){
@@ -347,7 +357,13 @@ public class InputPengadaan implements JMFormInterface {
         });*/
     }
     
+    public FormDetail getDetailForm(){
+        return this.form;
+    }
     
+    public JMTable getMasterTable(){
+        return this.table;
+    }
     
     
     
@@ -355,19 +371,20 @@ public class InputPengadaan implements JMFormInterface {
     public void actionAfterAdded(JMRow rowAdded) {
         this.row=rowAdded;
         this.setEditMode(true);
-        
     }
 
     @Override
     public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
         this.setEditMode(false);
         this.row=this.table.getCurrentRow();
+        this.refreshDetail();
     }
 
     @Override
     public void actionAfterSaved(String updateQuery,boolean saved) {
         this.setEditMode(!saved);
         this.btnGroup.stateNav();
+        this.refreshDetail();
     }
 
     @Override
@@ -386,6 +403,7 @@ public class InputPengadaan implements JMFormInterface {
     public void actionAfterRefreshed(JMRow rowRefreshed) {
         this.row=rowRefreshed;
         this.setEditMode(false);
+        this.refreshDetail();
     }
 
     @Override
@@ -398,30 +416,35 @@ public class InputPengadaan implements JMFormInterface {
     public void actionAfterMovedNext(JMRow nextRow) {
         this.row=nextRow;
         //this.setEditMode(false);
+        this.refreshDetail();
     }
 
     @Override
     public void actionAfterMovedPrev(JMRow prevRow) {
         this.row=prevRow;
         //this.setEditMode(false);
+        this.refreshDetail();
     }
 
     @Override
     public void actionAfterMovedFirst(JMRow firstRow) {
         this.row=firstRow;
         //this.setEditMode(false);
+        this.refreshDetail();
     }
 
     @Override
     public void actionAfterMovedLast(JMRow lastRow) {
         this.row=lastRow;
         //this.setEditMode(false);
+        this.refreshDetail();
     }
 
     @Override
     public void actionAfterMovedtoRecord(JMRow currentRow) {
         this.row=currentRow;
         //this.setEditMode(false);
+        this.refreshDetail();
     }
 
     @Override
@@ -436,6 +459,7 @@ public class InputPengadaan implements JMFormInterface {
             this.setEditMode(!canceled);
             if(canceled)this.row=rowCanceled;
         }
+        this.refreshDetail();
     }
 
     @Override

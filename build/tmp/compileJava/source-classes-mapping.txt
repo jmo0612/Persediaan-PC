@@ -13,6 +13,20 @@ persediaanpc/util/QueryHelperPersediaan.java
  persediaanpc.util.QueryHelperPersediaan
 persediaanpc/GitIgnoreDBConnection.java
  persediaanpc.GitIgnoreDBConnection
+persediaanpc/SplashScreen.java
+ persediaanpc.SplashScreen
+ persediaanpc.SplashScreen$1
+ persediaanpc.SplashScreen$2
+ persediaanpc.SplashScreen$2$1
+ persediaanpc.SplashScreen$3
+persediaanpc/FormDetail.java
+ persediaanpc.FormDetail
+ persediaanpc.FormDetail$1
+ persediaanpc.FormDetail$1$1
+persediaanpc/R.java
+ persediaanpc.R
+persediaanpc/Global.java
+ persediaanpc.Global
 persediaanpc/FormTable.java
  persediaanpc.FormTable
  persediaanpc.FormTable$1
@@ -21,19 +35,6 @@ persediaanpc/FormInput.java
  persediaanpc.FormInput
  persediaanpc.FormInput$1
  persediaanpc.FormInput$1$1
-persediaanpc/SplashScreen.java
- persediaanpc.SplashScreen
- persediaanpc.SplashScreen$1
- persediaanpc.SplashScreen$2
- persediaanpc.SplashScreen$2$1
- persediaanpc.SplashScreen$3
-persediaanpc/R.java
- persediaanpc.R
-persediaanpc/Global.java
- persediaanpc.Global
-persediaanpc/tables/InputPengadaan.java
- persediaanpc.tables.InputPengadaan
- persediaanpc.tables.InputPengadaan$1
 persediaanpc/tables/TablePengadaan.java
  persediaanpc.tables.TablePengadaan
  persediaanpc.tables.TablePengadaan$1
@@ -42,3 +43,17 @@ persediaanpc/tables/TablePengadaan.java
  persediaanpc.tables.TablePengadaan$4
  persediaanpc.tables.TablePengadaan$5
  persediaanpc.tables.TablePengadaan$6
+persediaanpc/tables/InputPengadaan.java
+ persediaanpc.tables.InputPengadaan
+ persediaanpc.tables.InputPengadaan$1
+persediaanpc/tables/InputPengadaanDetail.java
+ persediaanpc.tables.InputPengadaanDetail
+ persediaanpc.tables.InputPengadaanDetail$1
+persediaanpc/tables/TablePengadaanDetail.java
+ persediaanpc.tables.TablePengadaanDetail
+ persediaanpc.tables.TablePengadaanDetail$1
+ persediaanpc.tables.TablePengadaanDetail$2
+ persediaanpc.tables.TablePengadaanDetail$3
+ persediaanpc.tables.TablePengadaanDetail$4
+ persediaanpc.tables.TablePengadaanDetail$5
+ persediaanpc.tables.TablePengadaanDetail$6
