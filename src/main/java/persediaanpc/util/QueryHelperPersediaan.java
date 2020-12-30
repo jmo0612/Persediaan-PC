@@ -172,5 +172,78 @@ public class QueryHelperPersediaan {
         return tmp.replace("[beforeDate]", beforeDate).replace("[idItem]", idItem);
     }
             
+    public static String qListItemForBidangFromDate(String date, String idBidang){
+        String tmp="SELECT \n" +
+"p_tb_item.id_item,\n" +
+"p_ref_kat.ket_kat,\n" +
+"p_tb_item.nm_item,\n" +
+"IF(qStockAll.stok IS NOT NULL,qStockAll.stok,0)AS total_stock,\n" +
+"IF(qStockBidang.stok IS NOT NULL,qStockBidang.stok,0)AS bidang_stock,\n" +
+"p_tb_item.satuan,\n" +
+"p_tb_item.id_kat\n" +
+"FROM p_tb_item\n" +
+"LEFT JOIN \n" +
+"\n" +
+"\n" +
+"(\n" +
+"SELECT \n" +
+"p_tb_item.*,\n" +
+"(@idKey:=p_tb_item.id_item)prm,\n" +
+"(\n" +
+"	SELECT \n" +
+"    mutBuku.stok_akhir\n" +
+"    FROM \n" +
+"    	(\n" +
+"            SELECT\n" +
+"            p_tb_mutasi_det_buku.*,\n" +
+"            p_tb_subitem.id_item\n" +
+"            FROM p_tb_mutasi_det_buku JOIN p_tb_subitem\n" +
+"            ON p_tb_mutasi_det_buku.id_subitem=p_tb_subitem.id_subitem\n" +
+"            WHERE id_item=@idKey\n" +
+"        )AS mutBuku\n" +
+"    JOIN p_tb_mutasi\n" +
+"    ON mutBuku.id_mutasi=p_tb_mutasi.id_mutasi\n" +
+"    WHERE tgl_mutasi<'[date]'\n" +
+"    ORDER BY tgl_mutasi DESC\n" +
+"    LIMIT 1\n" +
+")AS stok\n" +
+"FROM p_tb_item)AS qStockAll\n" +
+"ON p_tb_item.id_item=qStockAll.id_item\n" +
+"\n" +
+"\n" +
+"LEFT JOIN \n" +
+"(\n" +
+"    \n" +
+"    SELECT \n" +
+"    p_tb_item.id_item,\n" +
+"    (IF(qMasuk.qty IS NOT NULL,qMasuk.qty,0)-IF(qKeluar.qty IS NOT NULL,qKeluar.qty,0)) AS stok\n" +
+"    FROM p_tb_item\n" +
+"    LEFT JOIN\n" +
+"    (SELECT\n" +
+"    qDet.id_item, \n" +
+"    SUM(qDet.qty) qty\n" +
+"    FROM\n" +
+"    (SELECT p_tb_subitem.id_item, p_tb_mutasi_det_buku.qty FROM bmd.p_tb_mutasi AS p_tb_mutasi, bmd.p_tb_mutasi_det_buku AS p_tb_mutasi_det_buku, bmd.p_tb_subitem AS p_tb_subitem, bmd.p_ref_jenis_mutasi AS p_ref_jenis_mutasi WHERE p_tb_mutasi.id_mutasi = p_tb_mutasi_det_buku.id_mutasi AND p_tb_subitem.id_subitem = p_tb_mutasi_det_buku.id_subitem AND p_ref_jenis_mutasi.id_jenis_mutasi = p_tb_mutasi.id_jenis_mutasi AND p_tb_mutasi.tgl_mutasi < '[date]' AND p_ref_jenis_mutasi.debit = '1' AND p_tb_mutasi.id_bidang = '[idBidang]' AND p_tb_mutasi.approved = '1') AS qDet\n" +
+"    GROUP BY id_item) AS qMasuk\n" +
+"    ON p_tb_item.id_item=qMasuk.id_item\n" +
+"\n" +
+"    LEFT JOIN\n" +
+"    (SELECT\n" +
+"    qDet.id_item, \n" +
+"    SUM(qDet.qty) qty\n" +
+"    FROM\n" +
+"    (SELECT p_tb_subitem.id_item, p_tb_mutasi_det_buku.qty FROM bmd.p_tb_mutasi AS p_tb_mutasi, bmd.p_tb_mutasi_det_buku AS p_tb_mutasi_det_buku, bmd.p_tb_subitem AS p_tb_subitem, bmd.p_ref_jenis_mutasi AS p_ref_jenis_mutasi WHERE p_tb_mutasi.id_mutasi = p_tb_mutasi_det_buku.id_mutasi AND p_tb_subitem.id_subitem = p_tb_mutasi_det_buku.id_subitem AND p_ref_jenis_mutasi.id_jenis_mutasi = p_tb_mutasi.id_jenis_mutasi AND p_tb_mutasi.tgl_mutasi < '[date]' AND p_ref_jenis_mutasi.debit = '0' AND p_tb_mutasi.id_bidang = '[idBidang]' AND p_tb_mutasi.approved = '1') AS qDet\n" +
+"    GROUP BY id_item) AS qKeluar\n" +
+"    ON p_tb_item.id_item=qKeluar.id_item\n" +
+"    \n" +
+")AS qStockBidang\n" +
+"ON p_tb_item.id_item=qStockBidang.id_item\n" +
+"\n" +
+"\n" +
+"JOIN p_ref_kat\n" +
+"ON p_tb_item.id_kat=p_ref_kat.id_kat";
+        
+        return tmp.replace("[date]", date).replace("[idBidang]", idBidang);
+    }
     
 }

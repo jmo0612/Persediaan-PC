@@ -23,27 +23,26 @@ import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import persediaanpc.FormInput;
-import persediaanpc.FormDetail;
+import persediaanpc.FormTableLookup;
 import persediaanpc.FormTableLookup;
 import persediaanpc.util.QueryHelperPersediaan;
 /**
  *
  * @author jimi
  */
-public class InputPengadaanDetail implements JMFormInterface {
+public class InputItem implements JMFormInterface {
     private final String title=R.label("TITLE_OPD");
     private final JMTable table;
     private final FormInput form;
-    private final FormDetail parent;
+    private final FormTableLookup parent;
     
-    private JMPCInputStringTFWeblaf fIdDetMutasiReal;
-    private JMPCInputStringTFWeblaf fIdMutasi;
     private JMPCInputStringTFWeblaf fIdItem;
-    private JMPCInputStringTFWeblaf fRealQty;
-    private JMPCInputStringTFWeblaf fRealHargaPenerimaan;
-    private JMPCInputStringTFWeblafBtn fNmItem;
+    private JMPCInputStringTFWeblafBtn fKetKat;
+    private JMPCInputStringTFWeblaf fNmItem;
+    private JMPCInputStringTFWeblaf fTotalStock;
+    private JMPCInputStringTFWeblaf fBidangStock;
     private JMPCInputStringTFWeblaf fSatuan;
-    private JMPCInputStringTFWeblaf fSubtotal;
+    private JMPCInputStringTFWeblaf fIdKat;
 
     private JMRow row;
     private final JMPCDBButtonGroup btnGroup;
@@ -52,11 +51,11 @@ public class InputPengadaanDetail implements JMFormInterface {
     
     TablePengadaanDetail detPengadaan;
     
-    public static InputPengadaanDetail create(JMTable table,FormDetail parent,boolean editing,boolean adding){
-        return new InputPengadaanDetail(table,parent,editing,adding);
+    public static InputItem create(JMTable table,FormTableLookup parent,boolean editing,boolean adding){
+        return new InputItem(table,parent,editing,adding);
     }
     
-    public InputPengadaanDetail(JMTable table,FormDetail parent,boolean editing,boolean adding){
+    public InputItem(JMTable table,FormTableLookup parent,boolean editing,boolean adding){
         
         this.parent=parent;
         this.form=new FormInput(null,true);
@@ -87,49 +86,47 @@ public class InputPengadaanDetail implements JMFormInterface {
     public void view(boolean editing,boolean adding){
         int width=400;
         boolean horizontal=true;
-        this.fIdDetMutasiReal=JMPCInputStringTFWeblaf.create(R.label("ID_DET_MUTASI_REAL"),R.label("PROMPT_ID_DET_MUTASI_REAL"), 20, width, horizontal).setEditable(false);
-        this.fIdMutasi=JMPCInputStringTFWeblaf.create(R.label("ID_MUTASI"),R.label("PROMPT_ID_MUTASI"), 20, width, horizontal).setEditable(false);
         this.fIdItem=JMPCInputStringTFWeblaf.create(R.label("ID_ITEM"),R.label("PROMPT_ID_ITEM"), 20, width, horizontal).setEditable(false);
-        this.fNmItem=JMPCInputStringTFWeblafBtn.create(R.label("NM_ITEM"),R.label("PROMPT_NM_ITEM"), 20, width, horizontal).setEditable(true);
-        this.fRealQty=JMPCInputStringTFWeblaf.create(R.label("REAL_QTY"),R.label("PROMPT_REAL_QTY"), 20, width, horizontal).setEditable(false);
+        this.fKetKat=JMPCInputStringTFWeblafBtn.create(R.label("KET_KAT"),R.label("PROMPT_KET_KAT"), 20, width, horizontal).setEditable(true);
+        this.fNmItem=JMPCInputStringTFWeblaf.create(R.label("NM_ITEM"),R.label("PROMPT_NM_ITEM"), 20, width, horizontal).setEditable(true);
+        this.fTotalStock=JMPCInputStringTFWeblaf.create(R.label("TOTAL_STOCK"),R.label("PROMPT_TOTAL_STOCK"), 20, width, horizontal).setEditable(false);
+        this.fBidangStock=JMPCInputStringTFWeblaf.create(R.label("BIDANG_STOCK"),R.label("PROMPT_BIDANG_STOCK"), 20, width, horizontal).setEditable(false);
         this.fSatuan=JMPCInputStringTFWeblaf.create(R.label("SATUAN"),R.label("PROMPT_SATUAN"), 20, width, horizontal).setEditable(false);
-        this.fRealHargaPenerimaan=JMPCInputStringTFWeblaf.create(R.label("REAL_HARGA_PENERIMAAN"),R.label("PROMPT_REAL_HARGA_PENERIMAAN"), 20, width, horizontal).setEditable(false);
-        this.fSubtotal=JMPCInputStringTFWeblaf.create(R.label("SUBTOTAL"),R.label("PROMPT_SUBTOTAL"), 20, width, horizontal).setEditable(false);
-
+        this.fIdKat=JMPCInputStringTFWeblaf.create(R.label("ID_KAT"),R.label("PROMPT_ID_KAT"), 20, width, horizontal).setEditable(false);
         
-        this.table.setFormInterface(this.fIdDetMutasiReal, 0,true);
-        this.table.setFormInterface(this.fIdMutasi, 1,true);
-        this.table.setFormInterface(this.fIdItem, 2,true);
-        this.table.setFormInterface(this.fNmItem, 3,true);
-        this.table.setFormInterface(this.fRealQty, 4,true);
+
+        this.table.setFormInterface(this.fIdItem, 0,true);
+        this.table.setFormInterface(this.fKetKat, 1,true);
+        this.table.setFormInterface(this.fNmItem, 2,true);
+        this.table.setFormInterface(this.fTotalStock, 3,true);
+        this.table.setFormInterface(this.fBidangStock, 4,true);
         this.table.setFormInterface(this.fSatuan, 5,true);
-        this.table.setFormInterface(this.fRealHargaPenerimaan, 6,true);
-        this.table.setFormInterface(this.fSubtotal, 7,true);
+        this.table.setFormInterface(this.fIdKat, 6,true);
 
 
         
         this.row.displayInterface(true);
         //this.fInt.setVisible(true);
         
+        
+        
         Box box=Box.createVerticalBox();
-        box.add(this.fIdDetMutasiReal);
-        box.add(this.fIdMutasi);
         box.add(this.fIdItem);
+        box.add(this.fKetKat);
         box.add(this.fNmItem);
-        box.add(this.fRealQty);
+        box.add(this.fTotalStock);
+        box.add(this.fBidangStock);
         box.add(this.fSatuan);
-        box.add(this.fRealHargaPenerimaan);
-        box.add(this.fSubtotal);
+        box.add(this.fIdKat);
 
 
-        this.fIdDetMutasiReal.setVisible(false);
-        this.fIdMutasi.setVisible(false);
         this.fIdItem.setVisible(false);
+        //this.fKetKat.setVisible(false);
         //this.fNmItem.setVisible(false);
-        //this.fRealQty.setVisible(false);
+        this.fTotalStock.setVisible(false);
+        this.fBidangStock.setVisible(false);
         //this.fSatuan.setVisible(false);
-        //this.fRealHargaPenerimaan.setVisible(false);
-        this.fSubtotal.setVisible(false);
+        this.fIdKat.setVisible(false);
 
 
         
@@ -149,15 +146,15 @@ public class InputPengadaanDetail implements JMFormInterface {
         this.btnGroup.getBtnView().setVisible(false);
         
         
-        this.fNmItem.setButtonAction(new Runnable() {
+        this.fKetKat.setButtonAction(new Runnable() {
             @Override
             public void run() {
-                FormTableLookup frmLookItem=new FormTableLookup(null,true);
-                TableItem tbItem=TableItem.create(QueryHelperPersediaan.qListItemForBidangFromDate(Global.getCurDate().dateTimeDB(), Global.getCurIdBidang()), frmLookItem);
-                JMRow res=tbItem.select();
+                FormTableLookup frmLookKat=new FormTableLookup(null,true);
+                TableKategori tbKat=TableKategori.create("select * from p_ref_kat", frmLookKat);
+                JMRow res=tbKat.select();
                 if(res!=null){
-                    InputPengadaanDetail.this.fIdItem.setText(res.getCells().get(0).getDBValue());
-                    InputPengadaanDetail.this.fNmItem.setText(res.getCells().get(2).getDBValue());
+                    InputItem.this.fIdKat.setText(res.getCells().get(0).getDBValue());
+                    InputItem.this.fKetKat.setText(res.getCells().get(1).getDBValue());
                 }
             }
         });
@@ -178,15 +175,13 @@ public class InputPengadaanDetail implements JMFormInterface {
     
     private void setEditMode(boolean editMode){
         this.editMode=editMode;
-        this.fIdDetMutasiReal.setEditMode(editMode,this.row,0);
-        this.fIdMutasi.setEditMode(editMode,this.row,1);
-        this.fIdItem.setEditMode(editMode,this.row,2);
-        this.fNmItem.setEditMode(editMode,this.row,3);
-        this.fRealQty.setEditMode(editMode,this.row,4);
+        this.fIdItem.setEditMode(editMode,this.row,0);
+        this.fKetKat.setEditMode(editMode,this.row,1);
+        this.fNmItem.setEditMode(editMode,this.row,2);
+        this.fTotalStock.setEditMode(editMode,this.row,3);
+        this.fBidangStock.setEditMode(editMode,this.row,4);
         this.fSatuan.setEditMode(editMode,this.row,5);
-        this.fRealHargaPenerimaan.setEditMode(editMode,this.row,6);
-        this.fSubtotal.setEditMode(editMode,this.row,7);
-
+        this.fIdKat.setEditMode(editMode,this.row,6);
 
     }
     
@@ -202,11 +197,11 @@ public class InputPengadaanDetail implements JMFormInterface {
 
             @Override
             public void windowClosing(WindowEvent e) {
-                if(InputPengadaanDetail.this.editMode){
-                    InputPengadaanDetail.this.formClosing=true;
-                    InputPengadaanDetail.this.btnGroup.btnCancelClick();
+                if(InputItem.this.editMode){
+                    InputItem.this.formClosing=true;
+                    InputItem.this.btnGroup.btnCancelClick();
                 }else{
-                    InputPengadaanDetail.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                    InputItem.this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
                 }
             }
 
@@ -331,7 +326,7 @@ public class InputPengadaanDetail implements JMFormInterface {
             if(canceled){
                 this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
             }else{
-                InputPengadaanDetail.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+                InputItem.this.form.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
             }
         }else{
             this.setEditMode(!canceled);
