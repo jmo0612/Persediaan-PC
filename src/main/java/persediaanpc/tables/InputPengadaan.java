@@ -5,6 +5,7 @@
  */
 package persediaanpc.tables;
 
+import com.thowo.jmjavaframework.JMDate;
 import persediaanpc.Global;
 import persediaanpc.R;
 import com.thowo.jmjavaframework.JMFormInterface;
@@ -14,6 +15,7 @@ import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblafAC;
+import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblafBtn;
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
@@ -29,7 +31,7 @@ import persediaanpc.util.QueryHelperPersediaan;
  * @author jimi
  */
 public class InputPengadaan implements JMFormInterface {
-    private final String title=R.label("TITLE_OPD");
+    private final String title=R.label("TITLE_PENGADAAN");
     private final JMTable table;
     private final FormDetail form;
     private final FormTable parent;
@@ -40,7 +42,7 @@ public class InputPengadaan implements JMFormInterface {
     private JMPCInputStringTFWeblaf fTglMutasi;
     private JMPCInputStringTFWeblaf fNoBaMutasi;
     private JMPCInputStringTFWeblaf fIdJenisMutasi;
-    private JMPCInputStringTFWeblaf fNmPihak2;
+    private JMPCInputStringTFWeblafBtn fNmPihak2;
     private JMPCInputStringTFWeblaf fNipPihak2;
     private JMPCInputStringTFWeblaf fAlmtPihak2;
     private JMPCInputStringTFWeblaf fJabPihak2;
@@ -59,7 +61,7 @@ public class InputPengadaan implements JMFormInterface {
     private JMPCInputStringTFWeblaf fNoDokDasar2;
     private JMPCInputStringTFWeblaf fTglDokDasar2;
     private JMPCInputStringTFWeblaf fIdBidang;
-    private JMPCInputStringTFWeblaf fNmBidang;
+    private JMPCInputStringTFWeblafBtn fNmBidang;
     private JMPCInputStringTFWeblaf fApproved;
     private JMPCInputStringTFWeblaf fPrinted;
     private JMPCInputStringTFWeblaf fTotal;
@@ -111,9 +113,9 @@ public class InputPengadaan implements JMFormInterface {
         this.fIdTipe=JMPCInputStringTFWeblaf.create(R.label("ID_TIPE"),R.label("PROMPT_ID_TIPE"), 20, width, horizontal).setEditable(false);
         this.fKetTipe=JMPCInputStringTFWeblaf.create(R.label("KET_TIPE"),R.label("PROMPT_KET_TIPE"), 20, width, horizontal).setEditable(false);
         this.fTglMutasi=JMPCInputStringTFWeblaf.create(R.label("TGL_MUTASI"),R.label("PROMPT_TGL_MUTASI"), 20, width, horizontal).setEditable(false);
-        this.fNoBaMutasi=JMPCInputStringTFWeblaf.create(R.label("NO_BA_MUTASI"),R.label("PROMPT_NO_BA_MUTASI"), 20, width, horizontal).setEditable(false);
+        this.fNoBaMutasi=JMPCInputStringTFWeblaf.create(R.label("NO_BA_MUTASI"),R.label("PROMPT_NO_BA_MUTASI"), 20, width, horizontal).setEditable(true);
         this.fIdJenisMutasi=JMPCInputStringTFWeblaf.create(R.label("ID_JENIS_MUTASI"),R.label("PROMPT_ID_JENIS_MUTASI"), 20, width, horizontal).setEditable(false);
-        this.fNmPihak2=JMPCInputStringTFWeblaf.create(R.label("NM_PIHAK2"),R.label("PROMPT_NM_PIHAK2"), 20, width, horizontal).setEditable(false);
+        this.fNmPihak2=JMPCInputStringTFWeblafBtn.create(R.label("NM_PIHAK2"),R.label("PROMPT_NM_PIHAK2"), 20, width, horizontal).setEditable(true);
         this.fNipPihak2=JMPCInputStringTFWeblaf.create(R.label("NIP_PIHAK2"),R.label("PROMPT_NIP_PIHAK2"), 20, width, horizontal).setEditable(false);
         this.fAlmtPihak2=JMPCInputStringTFWeblaf.create(R.label("ALMT_PIHAK2"),R.label("PROMPT_ALMT_PIHAK2"), 20, width, horizontal).setEditable(false);
         this.fJabPihak2=JMPCInputStringTFWeblaf.create(R.label("JAB_PIHAK2"),R.label("PROMPT_JAB_PIHAK2"), 20, width, horizontal).setEditable(false);
@@ -127,12 +129,12 @@ public class InputPengadaan implements JMFormInterface {
         this.fNmPengurusBrg=JMPCInputStringTFWeblaf.create(R.label("NM_PENGURUS_BRG"),R.label("PROMPT_NM_PENGURUS_BRG"), 20, width, horizontal).setEditable(false);
         this.fNipPengurusBrg=JMPCInputStringTFWeblaf.create(R.label("NIP_PENGURUS_BRG"),R.label("PROMPT_NIP_PENGURUS_BRG"), 20, width, horizontal).setEditable(false);
         this.fJabPengurusBrg=JMPCInputStringTFWeblaf.create(R.label("JAB_PENGURUS_BRG"),R.label("PROMPT_JAB_PENGURUS_BRG"), 20, width, horizontal).setEditable(false);
-        this.fNoDokDasar=JMPCInputStringTFWeblaf.create(R.label("NO_DOK_DASAR"),R.label("PROMPT_NO_DOK_DASAR"), 20, width, horizontal).setEditable(false);
-        this.fTglDokDasar=JMPCInputStringTFWeblaf.create(R.label("TGL_DOK_DASAR"),R.label("PROMPT_TGL_DOK_DASAR"), 20, width, horizontal).setEditable(false);
-        this.fNoDokDasar2=JMPCInputStringTFWeblaf.create(R.label("NO_DOK_DASAR2"),R.label("PROMPT_NO_DOK_DASAR2"), 20, width, horizontal).setEditable(false);
-        this.fTglDokDasar2=JMPCInputStringTFWeblaf.create(R.label("TGL_DOK_DASAR2"),R.label("PROMPT_TGL_DOK_DASAR2"), 20, width, horizontal).setEditable(false);
+        this.fNoDokDasar=JMPCInputStringTFWeblaf.create(R.label("NO_DOK_DASAR"),R.label("PROMPT_NO_DOK_DASAR"), 20, width, horizontal).setEditable(true);
+        this.fTglDokDasar=JMPCInputStringTFWeblaf.create(R.label("TGL_DOK_DASAR"),R.label("PROMPT_TGL_DOK_DASAR"), 20, width, horizontal).setEditable(true);
+        this.fNoDokDasar2=JMPCInputStringTFWeblaf.create(R.label("NO_DOK_DASAR2"),R.label("PROMPT_NO_DOK_DASAR2"), 20, width, horizontal).setEditable(true);
+        this.fTglDokDasar2=JMPCInputStringTFWeblaf.create(R.label("TGL_DOK_DASAR2"),R.label("PROMPT_TGL_DOK_DASAR2"), 20, width, horizontal).setEditable(true);
         this.fIdBidang=JMPCInputStringTFWeblaf.create(R.label("ID_BIDANG"),R.label("PROMPT_ID_BIDANG"), 20, width, horizontal).setEditable(false);
-        this.fNmBidang=JMPCInputStringTFWeblaf.create(R.label("NM_BIDANG"),R.label("PROMPT_NM_BIDANG"), 20, width, horizontal).setEditable(false);
+        this.fNmBidang=JMPCInputStringTFWeblafBtn.create(R.label("NM_BIDANG"),R.label("PROMPT_NM_BIDANG"), 20, width, horizontal).setEditable(true);
         this.fApproved=JMPCInputStringTFWeblaf.create(R.label("APPROVED"),R.label("PROMPT_APPROVED"), 20, width, horizontal).setEditable(false);
         this.fPrinted=JMPCInputStringTFWeblaf.create(R.label("PRINTED"),R.label("PROMPT_PRINTED"), 20, width, horizontal).setEditable(false);
         this.fTotal=JMPCInputStringTFWeblaf.create(R.label("TOTAL"),R.label("PROMPT_TOTAL"), 20, width, horizontal).setEditable(false);
@@ -259,6 +261,8 @@ public class InputPengadaan implements JMFormInterface {
     private void refreshDetail(){
         //JMFunctions.trace(QueryHelperPersediaan.qDetailPengadaan(this.row.getCells().get(0).getDBValue()));
         this.detPengadaan=TablePengadaanDetail.create(QueryHelperPersediaan.qDetailPengadaan(this.row.getCells().get(0).getDBValue()), this);
+        Global.setCurDate((JMDate)this.row.getCells().get(3).getValue());
+        Global.setCurIdBidang(this.row.getCells().get(24).getDBValue());
     }
     
     private void lockAccess(){
@@ -469,7 +473,7 @@ public class InputPengadaan implements JMFormInterface {
 
     @Override
     public void actionAfterFiltered(String filter) {
-        this.parent.setSearch(filter);
+        //this.parent.setSearch(filter);
     }
 
     @Override

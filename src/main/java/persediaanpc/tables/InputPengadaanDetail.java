@@ -31,7 +31,7 @@ import persediaanpc.util.QueryHelperPersediaan;
  * @author jimi
  */
 public class InputPengadaanDetail implements JMFormInterface {
-    private final String title=R.label("TITLE_OPD");
+    private final String title=R.label("TITLE_PENGADAAN_DETAIL");
     private final JMTable table;
     private final FormInput form;
     private final FormDetail parent;
@@ -91,9 +91,9 @@ public class InputPengadaanDetail implements JMFormInterface {
         this.fIdMutasi=JMPCInputStringTFWeblaf.create(R.label("ID_MUTASI"),R.label("PROMPT_ID_MUTASI"), 20, width, horizontal).setEditable(false);
         this.fIdItem=JMPCInputStringTFWeblaf.create(R.label("ID_ITEM"),R.label("PROMPT_ID_ITEM"), 20, width, horizontal).setEditable(false);
         this.fNmItem=JMPCInputStringTFWeblafBtn.create(R.label("NM_ITEM"),R.label("PROMPT_NM_ITEM"), 20, width, horizontal).setEditable(true);
-        this.fRealQty=JMPCInputStringTFWeblaf.create(R.label("REAL_QTY"),R.label("PROMPT_REAL_QTY"), 20, width, horizontal).setEditable(false);
+        this.fRealQty=JMPCInputStringTFWeblaf.create(R.label("REAL_QTY"),R.label("PROMPT_REAL_QTY"), 20, width, horizontal).setEditable(true);
         this.fSatuan=JMPCInputStringTFWeblaf.create(R.label("SATUAN"),R.label("PROMPT_SATUAN"), 20, width, horizontal).setEditable(false);
-        this.fRealHargaPenerimaan=JMPCInputStringTFWeblaf.create(R.label("REAL_HARGA_PENERIMAAN"),R.label("PROMPT_REAL_HARGA_PENERIMAAN"), 20, width, horizontal).setEditable(false);
+        this.fRealHargaPenerimaan=JMPCInputStringTFWeblaf.create(R.label("REAL_HARGA_PENERIMAAN"),R.label("PROMPT_REAL_HARGA_PENERIMAAN"), 20, width, horizontal).setEditable(true);
         this.fSubtotal=JMPCInputStringTFWeblaf.create(R.label("SUBTOTAL"),R.label("PROMPT_SUBTOTAL"), 20, width, horizontal).setEditable(false);
 
         

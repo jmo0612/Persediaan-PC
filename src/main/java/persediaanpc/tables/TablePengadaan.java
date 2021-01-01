@@ -34,7 +34,7 @@ import persediaanpc.FormTable;
 
 
 public class TablePengadaan implements JMFormInterface{
-    private final String title=R.label("TITLE_OPD");
+    private final String title=R.label("TITLE_PENGADAAN");
     private final String queryView;
     private final JMTable dbObject;
     private final JMPCTable table;
@@ -48,6 +48,13 @@ public class TablePengadaan implements JMFormInterface{
     
     public TablePengadaan(String query,FormTable parent){
         this.parent=parent;
+        this.parent.setTitle(this.title);
+        this.parent.setFilterAction(new Runnable() {
+            @Override
+            public void run() {
+                TablePengadaan.this.dbObject.filter(TablePengadaan.this.parent.getSearch().getText());
+            }
+        });
         this.queryView=query;
         
         Object[] boolImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
@@ -109,6 +116,14 @@ public class TablePengadaan implements JMFormInterface{
                 .addFormat(26, JMResultSetStyle.FORMAT_IMAGE, boolImg)
                 .addFormat(27, JMResultSetStyle.FORMAT_IMAGE, boolImg);
         this.dbObject.refresh();
+        
+        List<Integer> excluded=new ArrayList();
+        excluded.add(1);
+        excluded.add(2);
+        excluded.add(25);
+        excluded.add(28);
+        this.dbObject.excludeColumnsFromUpdate(excluded);
+        
         this.dbObject.addInterface(this);
         this.dbObject.setName("p_tb_mutasi");
         this.primaryKeys=new ArrayList();
@@ -331,7 +346,7 @@ public class TablePengadaan implements JMFormInterface{
 
     @Override
     public void actionAfterFiltered(String filter) {
-        this.parent.setSearch(filter);
+        //this.parent.setSearch(filter);
     }
 
     @Override

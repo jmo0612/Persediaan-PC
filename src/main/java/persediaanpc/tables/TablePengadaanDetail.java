@@ -35,7 +35,7 @@ import persediaanpc.FormTable;
 
 
 public class TablePengadaanDetail implements JMFormInterface{
-    private final String title=R.label("TITLE_OPD");
+    private final String title=R.label("TITLE_PENGADAAN_DETAIL");
     private final String queryView;
     private final JMTable dbObject;
     private final JMPCTable table;
@@ -49,6 +49,7 @@ public class TablePengadaanDetail implements JMFormInterface{
     
     public TablePengadaanDetail(String query,InputPengadaan pengadaan){
         this.parent=pengadaan.getDetailForm();
+        this.parent.setTitle(this.title);
         this.queryView=query;
         
         //Object[] boolImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
@@ -68,6 +69,13 @@ public class TablePengadaanDetail implements JMFormInterface{
                 .setColHidden(1)
                 .setColHidden(2);
         this.dbObject.refresh();
+        
+        List<Integer> excluded=new ArrayList();
+        excluded.add(3);
+        excluded.add(5);
+        excluded.add(7);
+        this.dbObject.excludeColumnsFromUpdate(excluded);
+        
         this.dbObject.addInterface(this);
         this.dbObject.setName("p_tb_mutasi_det_real");
         this.primaryKeys=new ArrayList();

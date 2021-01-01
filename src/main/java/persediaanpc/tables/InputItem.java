@@ -31,7 +31,7 @@ import persediaanpc.util.QueryHelperPersediaan;
  * @author jimi
  */
 public class InputItem implements JMFormInterface {
-    private final String title=R.label("TITLE_OPD");
+    private final String title=R.label("TITLE_ITEM");
     private final JMTable table;
     private final FormInput form;
     private final FormTableLookup parent;
@@ -91,7 +91,7 @@ public class InputItem implements JMFormInterface {
         this.fNmItem=JMPCInputStringTFWeblaf.create(R.label("NM_ITEM"),R.label("PROMPT_NM_ITEM"), 20, width, horizontal).setEditable(true);
         this.fTotalStock=JMPCInputStringTFWeblaf.create(R.label("TOTAL_STOCK"),R.label("PROMPT_TOTAL_STOCK"), 20, width, horizontal).setEditable(false);
         this.fBidangStock=JMPCInputStringTFWeblaf.create(R.label("BIDANG_STOCK"),R.label("PROMPT_BIDANG_STOCK"), 20, width, horizontal).setEditable(false);
-        this.fSatuan=JMPCInputStringTFWeblaf.create(R.label("SATUAN"),R.label("PROMPT_SATUAN"), 20, width, horizontal).setEditable(false);
+        this.fSatuan=JMPCInputStringTFWeblaf.create(R.label("SATUAN"),R.label("PROMPT_SATUAN"), 20, width, horizontal).setEditable(true);
         this.fIdKat=JMPCInputStringTFWeblaf.create(R.label("ID_KAT"),R.label("PROMPT_ID_KAT"), 20, width, horizontal).setEditable(false);
         
 

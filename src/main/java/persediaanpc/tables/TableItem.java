@@ -34,7 +34,7 @@ import persediaanpc.FormTableLookup;
 
 
 public class TableItem implements JMFormInterface{
-    private final String title=R.label("TITLE_OPD");
+    private final String title=R.label("TITLE_ITEM");
     private final String queryView;
     private final JMTable dbObject;
     private final JMPCTable table;
@@ -50,6 +50,13 @@ public class TableItem implements JMFormInterface{
     
     public TableItem(String query,FormTableLookup parent){
         this.parent=parent;
+        this.parent.setTitle(this.title);
+        this.parent.setFilterAction(new Runnable() {
+            @Override
+            public void run() {
+                TableItem.this.dbObject.filter(TableItem.this.parent.getSearch().getText());
+            }
+        });
         this.queryView=query;
         
         //Object[] boolImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
@@ -67,8 +74,15 @@ public class TableItem implements JMFormInterface{
                 .setColHidden(0)
                 .setColHidden(6);
         this.dbObject.refresh();
+        
+        List<Integer> excluded=new ArrayList();
+        excluded.add(1);
+        excluded.add(3);
+        excluded.add(4);
+        this.dbObject.excludeColumnsFromUpdate(excluded);
+        
         this.dbObject.addInterface(this);
-        this.dbObject.setName("p_tb_mutasi");
+        this.dbObject.setName("p_tb_item");
         this.primaryKeys=new ArrayList();
         this.primaryKeys.add(0);
         this.dbObject.setKeyColumns(this.primaryKeys);
@@ -312,7 +326,7 @@ public class TableItem implements JMFormInterface{
 
     @Override
     public void actionAfterFiltered(String filter) {
-        this.parent.setSearch(filter);
+        //this.parent.setSearch(filter);
     }
 
     @Override

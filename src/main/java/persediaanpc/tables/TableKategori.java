@@ -34,7 +34,7 @@ import persediaanpc.FormTableLookup;
 
 
 public class TableKategori implements JMFormInterface{
-    private final String title=R.label("TITLE_OPD");
+    private final String title=R.label("TITLE_KATEGORI");
     private final String queryView;
     private final JMTable dbObject;
     private final JMPCTable table;
@@ -50,6 +50,13 @@ public class TableKategori implements JMFormInterface{
     
     public TableKategori(String query,FormTableLookup parent){
         this.parent=parent;
+        this.parent.setTitle(this.title);
+        this.parent.setFilterAction(new Runnable() {
+            @Override
+            public void run() {
+                TableKategori.this.dbObject.filter(TableKategori.this.parent.getSearch().getText());
+            }
+        });
         this.queryView=query;
         
         //Object[] boolImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
@@ -307,7 +314,7 @@ public class TableKategori implements JMFormInterface{
 
     @Override
     public void actionAfterFiltered(String filter) {
-        this.parent.setSearch(filter);
+        //this.parent.setSearch(filter);
     }
 
     @Override

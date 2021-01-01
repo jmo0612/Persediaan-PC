@@ -5,8 +5,13 @@
  */
 package persediaanpc;
 
+import com.thowo.jmjavaframework.JMVec2;
+import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCForm;
+import persediaanpc.tables.TablePengadaan;
+import persediaanpc.util.LiveTimer;
 import persediaanpc.util.MutasiBuku;
+import persediaanpc.util.QueryHelperPersediaan;
 
 /**
  *
@@ -19,6 +24,13 @@ public class FormMain extends JMPCForm{
      */
     public FormMain() {
         initComponents();
+        Global.liveTimer=new LiveTimer();
+        Global.liveTimer.addLabelComponent(this.jLabel1);
+        JMPCFunctions.attachImageToAnEmptyPanelOnForm("img/wp.jpg",this.getClass(), this.jPanel3,this);
+        this.setExtendedState(MAXIMIZED_BOTH);
+        
+        
+        
     }
 
     /**
@@ -31,53 +43,180 @@ public class FormMain extends JMPCForm{
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenu8 = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenu6 = new javax.swing.JMenu();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenu7 = new javax.swing.JMenu();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenu5 = new javax.swing.JMenu();
+        jMenu9 = new javax.swing.JMenu();
+        jMenuItem12 = new javax.swing.JMenuItem();
+        jMenu10 = new javax.swing.JMenu();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
+        jMenuItem15 = new javax.swing.JMenuItem();
+        jMenuItem16 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel1.setLayout(new javax.swing.OverlayLayout(jPanel1));
 
-        jButton1.setText("Barang Masuk");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setOpaque(false);
 
-        jButton2.setText("Barang Keluar");
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
+        jLabel1.setText("Date");
 
-        jButton3.setText("Laporan");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 187, Short.MAX_VALUE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addContainerGap(873, Short.MAX_VALUE)
+                .addComponent(jLabel1)
                 .addContainerGap())
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton3)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jLabel1)
+                .addContainerGap(416, Short.MAX_VALUE))
         );
+
+        jPanel1.add(jPanel2);
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 935, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 451, Short.MAX_VALUE)
+        );
+
+        jPanel1.add(jPanel3);
+
+        jMenu1.setText("File");
+
+        jMenuItem1.setText("Login");
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setText("Logout");
+        jMenu1.add(jMenuItem2);
+        jMenu1.add(jSeparator1);
+
+        jMenuItem3.setText("Keluar");
+        jMenu1.add(jMenuItem3);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Parameter");
+
+        jMenu8.setText("Pegawai");
+
+        jMenuItem8.setText("Daftar Pegawai");
+        jMenu8.add(jMenuItem8);
+
+        jMenuItem9.setText("Pelaku Pengadaan");
+        jMenu8.add(jMenuItem9);
+
+        jMenuItem10.setText("Pejabat BMD");
+        jMenu8.add(jMenuItem10);
+
+        jMenu2.add(jMenu8);
+        jMenu2.add(jSeparator2);
+
+        jMenuItem11.setText("Bidang");
+        jMenu2.add(jMenuItem11);
+
+        jMenuBar1.add(jMenu2);
+
+        jMenu3.setText("Data Entry");
+
+        jMenu6.setText("Barang Masuk");
+
+        jMenuItem4.setText("Pengadaan");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu6.add(jMenuItem4);
+
+        jMenuItem5.setText("Hibah");
+        jMenu6.add(jMenuItem5);
+
+        jMenu3.add(jMenu6);
+
+        jMenu7.setText("Barang Keluar");
+
+        jMenuItem6.setText("Penyaluran");
+        jMenu7.add(jMenuItem6);
+
+        jMenu3.add(jMenu7);
+
+        jMenuBar1.add(jMenu3);
+
+        jMenu4.setText("Proses");
+
+        jMenuItem7.setText("Proses Laporan Persediaan");
+        jMenu4.add(jMenuItem7);
+
+        jMenuBar1.add(jMenu4);
+
+        jMenu5.setText("Laporan");
+
+        jMenu9.setText("Penerimaan Barang");
+
+        jMenuItem12.setText("BA Penerimaan");
+        jMenu9.add(jMenuItem12);
+
+        jMenu5.add(jMenu9);
+
+        jMenu10.setText("Pengeluaran Barang");
+
+        jMenuItem13.setText("Nota Permintaan");
+        jMenu10.add(jMenuItem13);
+
+        jMenuItem14.setText("Surat Perintah Penyaluran Barang");
+        jMenu10.add(jMenuItem14);
+
+        jMenuItem15.setText("BA Penyaluran Barang");
+        jMenu10.add(jMenuItem15);
+
+        jMenu5.add(jMenu10);
+
+        jMenuItem16.setText("Persediaan Barang");
+        jMenu5.add(jMenuItem16);
+
+        jMenuBar1.add(jMenu5);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -97,17 +236,15 @@ public class FormMain extends JMPCForm{
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
-        new FormMenuM(this,true).setVisible(true);
-    }//GEN-LAST:event_jButton1ActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        MutasiBuku.create();
-    }//GEN-LAST:event_jButton3ActionPerformed
+        FormTable frmPengadaan=new FormTable(null,true);
+        TablePengadaan tbPengadaan=TablePengadaan.create(QueryHelperPersediaan.qListPengadaan, frmPengadaan);
+        frmPengadaan.setVisible(true);
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -145,9 +282,38 @@ public class FormMain extends JMPCForm{
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton3;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu10;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
+    private javax.swing.JMenu jMenu9;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
+    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
     // End of variables declaration//GEN-END:variables
 }

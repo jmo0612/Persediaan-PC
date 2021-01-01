@@ -6,6 +6,7 @@
 package persediaanpc;
 
 import com.thowo.jmjavaframework.JMDate;
+import persediaanpc.util.LiveTimer;
 
 /**
  *
@@ -15,19 +16,14 @@ public class Global {
     private static String user;
     private static boolean editor=true;
     private static boolean admin;
+    private static boolean itUser=true;
     private static int activeYear=2020;
-    private static JMDate liveDate=JMDate.now();
     
     private static JMDate curDate=JMDate.now();
     private static String curIdBidang="";
     
-    public static void setLiveDate(JMDate date){
-        liveDate=date;
-    }
+    public static LiveTimer liveTimer;
     
-    public static JMDate getLiveDate(){
-        return liveDate;
-    }
     
     public static void setCurDate(JMDate date){
         curDate=date;
@@ -68,5 +64,11 @@ public class Global {
     }
     public static void setEditor(boolean isEditor){
         editor=isEditor;
+    }
+    public static boolean getItUser(){
+        return itUser;
+    }
+    public static void setItUser(boolean isItUser){
+        itUser=isItUser;
     }
 }

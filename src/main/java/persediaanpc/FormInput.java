@@ -5,13 +5,14 @@
  */
 package persediaanpc;
 
+import com.thowo.jmpcframework.component.JMPCFormModal;
 import javax.swing.JPanel;
 
 /**
  *
  * @author jimi
  */
-public class FormInput extends javax.swing.JDialog {
+public class FormInput extends JMPCFormModal {
 
     /**
      * Creates new form FormInput
@@ -27,6 +28,12 @@ public class FormInput extends javax.swing.JDialog {
     
     public JPanel getButtonsPanel(){
         return this.jPanel4;
+    }
+    
+    @Override
+    public void setTitle(String title){
+        super.setTitle(title);
+        this.jLabel1.setText(title);
     }
 
     /**
@@ -50,23 +57,24 @@ public class FormInput extends javax.swing.JDialog {
 
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
+        jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 18)); // NOI18N
         jLabel1.setText("jLabel1");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(967, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 771, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(29, Short.MAX_VALUE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 39, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -137,6 +145,7 @@ public class FormInput extends javax.swing.JDialog {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     /**
