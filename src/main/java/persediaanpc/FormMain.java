@@ -8,7 +8,12 @@ package persediaanpc;
 import com.thowo.jmjavaframework.JMVec2;
 import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCForm;
+import persediaanpc.tables.TableBidang;
+import persediaanpc.tables.TableItem;
+import persediaanpc.tables.TablePBJ;
+import persediaanpc.tables.TablePegawai;
 import persediaanpc.tables.TablePengadaan;
+import persediaanpc.tables.TablePjBrg;
 import persediaanpc.util.LiveTimer;
 import persediaanpc.util.MutasiBuku;
 import persediaanpc.util.QueryHelperPersediaan;
@@ -59,6 +64,8 @@ public class FormMain extends JMPCForm{
         jMenuItem10 = new javax.swing.JMenuItem();
         jSeparator2 = new javax.swing.JPopupMenu.Separator();
         jMenuItem11 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem17 = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         jMenu6 = new javax.swing.JMenu();
         jMenuItem4 = new javax.swing.JMenuItem();
@@ -140,19 +147,48 @@ public class FormMain extends JMPCForm{
         jMenu8.setText("Pegawai");
 
         jMenuItem8.setText("Daftar Pegawai");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
         jMenu8.add(jMenuItem8);
 
-        jMenuItem9.setText("Pelaku Pengadaan");
+        jMenuItem9.setText("Pejabat PBJ");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
         jMenu8.add(jMenuItem9);
 
         jMenuItem10.setText("Pejabat BMD");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
         jMenu8.add(jMenuItem10);
 
         jMenu2.add(jMenu8);
         jMenu2.add(jSeparator2);
 
         jMenuItem11.setText("Bidang");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
         jMenu2.add(jMenuItem11);
+        jMenu2.add(jSeparator3);
+
+        jMenuItem17.setText("Barang Persediaan");
+        jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem17ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem17);
 
         jMenuBar1.add(jMenu2);
 
@@ -185,6 +221,11 @@ public class FormMain extends JMPCForm{
         jMenu4.setText("Proses");
 
         jMenuItem7.setText("Proses Laporan Persediaan");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
         jMenu4.add(jMenuItem7);
 
         jMenuBar1.add(jMenu4);
@@ -246,6 +287,46 @@ public class FormMain extends JMPCForm{
         frmPengadaan.setVisible(true);
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
+    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
+        // TODO add your handling code here:
+        FormTable frmItem=new FormTable(null,true);
+        TableItem tbItem=TableItem.create(QueryHelperPersediaan.qListItemForBidangFromDate(Global.liveTimer.getDate().dateTimeDB(), ""), frmItem);
+        frmItem.setVisible(true);
+    }//GEN-LAST:event_jMenuItem17ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        // TODO add your handling code here:
+        FormTable frmPeg=new FormTable(null,true);
+        TablePegawai tbPeg=TablePegawai.create(QueryHelperPersediaan.qPegawai, frmPeg);
+        frmPeg.setVisible(true);
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        // TODO add your handling code here:
+        FormTable frmBid=new FormTable(null,true);
+        TableBidang tbBid=TableBidang.create("select * from p_tb_bidang", frmBid);
+        frmBid.setVisible(true);
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        // TODO add your handling code here:
+        FormTable frmPBJ=new FormTable(null,true);
+        TablePBJ tbPBJ=TablePBJ.create(QueryHelperPersediaan.qPBJ, frmPBJ);
+        frmPBJ.setVisible(true);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        // TODO add your handling code here:
+        FormTable frmPjBrg=new FormTable(null,true);
+        TablePjBrg tbPBJ=TablePjBrg.create("select * from p_tb_pj_barang", frmPjBrg);
+        frmPjBrg.setVisible(true);
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        // TODO add your handling code here:
+        MutasiBuku.create();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -302,6 +383,7 @@ public class FormMain extends JMPCForm{
     private javax.swing.JMenuItem jMenuItem14;
     private javax.swing.JMenuItem jMenuItem15;
     private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -315,5 +397,6 @@ public class FormMain extends JMPCForm{
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
     // End of variables declaration//GEN-END:variables
 }

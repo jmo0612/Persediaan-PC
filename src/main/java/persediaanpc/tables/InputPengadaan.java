@@ -10,6 +10,7 @@ import persediaanpc.Global;
 import persediaanpc.R;
 import com.thowo.jmjavaframework.JMFormInterface;
 import com.thowo.jmjavaframework.JMFunctions;
+import com.thowo.jmjavaframework.table.JMCell;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.component.form.JMPCDBButtonGroup;
@@ -20,11 +21,14 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import persediaanpc.FormDetail;
 import persediaanpc.FormTable;
+import persediaanpc.FormTableLookup;
 import persediaanpc.util.QueryHelperPersediaan;
 /**
  *
@@ -34,7 +38,8 @@ public class InputPengadaan implements JMFormInterface {
     private final String title=R.label("TITLE_PENGADAAN");
     private final JMTable table;
     private final FormDetail form;
-    private final FormTable parent;
+    private final FormTableLookup parentTableLookup;
+    private final FormTable parentTable;
     
     private JMPCInputStringTFWeblaf fIdMutasi;
     private JMPCInputStringTFWeblaf fIdTipe;
@@ -61,7 +66,7 @@ public class InputPengadaan implements JMFormInterface {
     private JMPCInputStringTFWeblaf fNoDokDasar2;
     private JMPCInputStringTFWeblaf fTglDokDasar2;
     private JMPCInputStringTFWeblaf fIdBidang;
-    private JMPCInputStringTFWeblafBtn fNmBidang;
+    private JMPCInputStringTFWeblaf fNmBidang;
     private JMPCInputStringTFWeblaf fApproved;
     private JMPCInputStringTFWeblaf fPrinted;
     private JMPCInputStringTFWeblaf fTotal;
@@ -74,13 +79,19 @@ public class InputPengadaan implements JMFormInterface {
     
     TablePengadaanDetail detPengadaan;
     
-    public static InputPengadaan create(JMTable table,FormTable parent,boolean editing,boolean adding){
-        return new InputPengadaan(table,parent,editing,adding);
+    
+    public static InputPengadaan create(JMTable table,FormTableLookup parent,boolean editing,boolean adding){
+        return new InputPengadaan(table,null,parent,editing,adding);
     }
     
-    public InputPengadaan(JMTable table,FormTable parent,boolean editing,boolean adding){
+    public static InputPengadaan create(JMTable table,FormTable parent,boolean editing,boolean adding){
+        return new InputPengadaan(table,parent,null,editing,adding);
+    }
+    
+    public InputPengadaan(JMTable table,FormTable parentTable,FormTableLookup parentTableLookup,boolean editing,boolean adding){
         
-        this.parent=parent;
+        this.parentTable=parentTable;
+        this.parentTableLookup=parentTableLookup;
         this.form=new FormDetail(null,true);
         this.form.setTitle(this.title);
         this.table=table;
@@ -134,7 +145,7 @@ public class InputPengadaan implements JMFormInterface {
         this.fNoDokDasar2=JMPCInputStringTFWeblaf.create(R.label("NO_DOK_DASAR2"),R.label("PROMPT_NO_DOK_DASAR2"), 20, width, horizontal).setEditable(true);
         this.fTglDokDasar2=JMPCInputStringTFWeblaf.create(R.label("TGL_DOK_DASAR2"),R.label("PROMPT_TGL_DOK_DASAR2"), 20, width, horizontal).setEditable(true);
         this.fIdBidang=JMPCInputStringTFWeblaf.create(R.label("ID_BIDANG"),R.label("PROMPT_ID_BIDANG"), 20, width, horizontal).setEditable(false);
-        this.fNmBidang=JMPCInputStringTFWeblafBtn.create(R.label("NM_BIDANG"),R.label("PROMPT_NM_BIDANG"), 20, width, horizontal).setEditable(true);
+        this.fNmBidang=JMPCInputStringTFWeblaf.create(R.label("NM_BIDANG"),R.label("PROMPT_NM_BIDANG"), 20, width, horizontal).setEditable(false);
         this.fApproved=JMPCInputStringTFWeblaf.create(R.label("APPROVED"),R.label("PROMPT_APPROVED"), 20, width, horizontal).setEditable(false);
         this.fPrinted=JMPCInputStringTFWeblaf.create(R.label("PRINTED"),R.label("PROMPT_PRINTED"), 20, width, horizontal).setEditable(false);
         this.fTotal=JMPCInputStringTFWeblaf.create(R.label("TOTAL"),R.label("PROMPT_TOTAL"), 20, width, horizontal).setEditable(false);
@@ -252,17 +263,51 @@ public class InputPengadaan implements JMFormInterface {
         this.btnGroup.getBtnPrint().setVisible(false);
         this.btnGroup.getBtnView().setVisible(false);
         
+        this.fNmPihak2.setButtonAction(new Runnable() {
+            @Override
+            public void run() {
+                FormTableLookup frmLookPPK=new FormTableLookup(null,true);
+                TablePBJ tbPPK=TablePBJ.create(QueryHelperPersediaan.qPBJ, frmLookPPK);
+                JMRow res=tbPPK.select();
+                if(res!=null){
+                    InputPengadaan.this.row.setValueFromString(6, res.getCells().get(1).getDBValue()); 
+                    InputPengadaan.this.row.setValueFromString(7, res.getCells().get(2).getDBValue()); 
+                    InputPengadaan.this.row.setValueFromString(9, res.getCells().get(5).getDBValue()); 
+                    InputPengadaan.this.row.setValueFromString(24, res.getCells().get(6).getDBValue()); 
+                    InputPengadaan.this.row.setValueFromString(25, res.getCells().get(7).getDBValue()); 
+                }
+            }
+        });
+        
         
         this.refreshDetail();
         
         form.setVisible(true);
+        this.table.removeInterface(this);
+    }
+    
+    public String getCurIdMutasi(){
+        return this.row.getCells().get(0).getDBValue();
+    }
+    
+    public void overrideTotal(){
+        JMTable tmp=JMTable.create(QueryHelperPersediaan.qTotal(this.row.getCells().get(0).getDBValue()), JMTable.DBTYPE_MYSQL);
+        double d=0;
+        if(!tmp.isEmpty()){
+            d=tmp.firstRow(false).getCells().get(0).getValueDouble();
+        }
+        this.row.setValueFromString(28, String.valueOf(d));
     }
     
     private void refreshDetail(){
         //JMFunctions.trace(QueryHelperPersediaan.qDetailPengadaan(this.row.getCells().get(0).getDBValue()));
+        if(this.row==null)return;
+        JMFunctions.trace(this.row.getCells().get(0).getDBValue());
         this.detPengadaan=TablePengadaanDetail.create(QueryHelperPersediaan.qDetailPengadaan(this.row.getCells().get(0).getDBValue()), this);
         Global.setCurDate((JMDate)this.row.getCells().get(3).getValue());
         Global.setCurIdBidang(this.row.getCells().get(24).getDBValue());
+        this.detPengadaan.lockAccess(this.editMode);
+        
     }
     
     private void lockAccess(){
@@ -305,8 +350,10 @@ public class InputPengadaan implements JMFormInterface {
         this.fApproved.setEditMode(editMode,this.row,26);
         this.fPrinted.setEditMode(editMode,this.row,27);
         this.fTotal.setEditMode(editMode,this.row,28);
+        //if(this.detPengadaan!=null)this.detPengadaan.lockAccess(this.editMode);
 
     }
+    
     
     
     
@@ -370,15 +417,15 @@ public class InputPengadaan implements JMFormInterface {
     }
     
     
-    
     @Override
     public void actionAfterAdded(JMRow rowAdded) {
         this.row=rowAdded;
         this.setEditMode(true);
+        this.refreshDetail();
     }
 
     @Override
-    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted, String extra) {
         this.setEditMode(false);
         this.row=this.table.getCurrentRow();
         this.refreshDetail();
@@ -395,6 +442,7 @@ public class InputPengadaan implements JMFormInterface {
     public void actionAfterEdited(JMRow rowEdited) {
         this.row=rowEdited;
         this.setEditMode(true);
+        this.refreshDetail();
     }
 
     @Override
@@ -452,7 +500,7 @@ public class InputPengadaan implements JMFormInterface {
     }
 
     @Override
-    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterCanceled(JMRow newCurrentRow, boolean canceled, JMRow canceledRow) {
         if(this.formClosing){
             if(canceled){
                 this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -461,7 +509,7 @@ public class InputPengadaan implements JMFormInterface {
             }
         }else{
             this.setEditMode(!canceled);
-            if(canceled)this.row=rowCanceled;
+            if(canceled)this.row=newCurrentRow;
         }
         this.refreshDetail();
     }

@@ -246,4 +246,22 @@ public class QueryHelperPersediaan {
         return tmp.replace("[date]", date).replace("[idBidang]", idBidang);
     }
     
+    public static String qPegawai="SELECT p_tb_pegawai.id_pegawai, p_tb_pegawai.nm_pegawai, p_tb_pegawai.nip_pegawai, p_tb_pegawai.jab_pegawai, p_tb_pegawai.id_bidang, p_tb_bidang.nm_bidang, p_tb_pegawai.aktif FROM bmd.p_tb_bidang AS p_tb_bidang, bmd.p_tb_pegawai AS p_tb_pegawai WHERE p_tb_bidang.id_bidang = p_tb_pegawai.id_bidang";
+    
+    public static String qPegawaiAktif="SELECT p_tb_pegawai.id_pegawai, p_tb_pegawai.nm_pegawai, p_tb_pegawai.nip_pegawai, p_tb_pegawai.jab_pegawai, p_tb_pegawai.id_bidang, p_tb_bidang.nm_bidang, p_tb_pegawai.aktif FROM bmd.p_tb_bidang AS p_tb_bidang, bmd.p_tb_pegawai AS p_tb_pegawai WHERE p_tb_bidang.id_bidang = p_tb_pegawai.id_bidang AND p_tb_pegawai.aktif='1'";
+    
+    public static String qBidang="select * from p_tb_bidang";
+    
+    public static String qPBJ="SELECT p_tb_pj_pbj.id_pj_pbj, p_tb_pj_pbj.nm_pj_pbj, p_tb_pj_pbj.nip_pj_pbj, p_tb_pj_pbj.id_jab_pbj, p_ref_jab_pbj.singkat_jab_pbj, p_ref_jab_pbj.nm_jab_pbj, p_tb_pj_pbj.id_bidang, p_tb_bidang.nm_bidang, p_tb_pj_pbj.no_sk_jab_pbj, p_tb_pj_pbj.tgl_sk_jab_pbj FROM bmd.p_tb_bidang AS p_tb_bidang, bmd.p_tb_pj_pbj AS p_tb_pj_pbj, bmd.p_ref_jab_pbj AS p_ref_jab_pbj WHERE p_tb_bidang.id_bidang = p_tb_pj_pbj.id_bidang AND p_ref_jab_pbj.id_jab_pbj = p_tb_pj_pbj.id_jab_pbj";
+    
+    public static String qTotal(String idMutasi){
+        String tmp="SELECT\n" +
+"SUM(real_qty*real_harga_penerimaan)subtotal\n" +
+"FROM \n" +
+"p_tb_mutasi_det_real\n" +
+"WHERE id_mutasi='[ID_MUTASI]'\n" +
+"GROUP BY id_mutasi";
+        return tmp.replace("[ID_MUTASI]", idMutasi);
+    }
+    
 }

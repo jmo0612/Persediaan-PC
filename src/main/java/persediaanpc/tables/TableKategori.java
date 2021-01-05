@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import persediaanpc.FormTable;
 import persediaanpc.FormTableLookup;
 
 
@@ -40,23 +41,41 @@ public class TableKategori implements JMFormInterface{
     private final JMPCTable table;
     private final JMPCDBButtonGroup btnGroup;
     private final List<Integer> primaryKeys;
-    private final FormTableLookup parent;
+    private final FormTableLookup parentTableLookup;
+    private final FormTable parentTable;
     
     private JMRow selectedRow=null;
     
     public static TableKategori create(String query,FormTableLookup parent){
-        return new TableKategori(query,parent);
+        return new TableKategori(query,null,parent);
+    }
+    public static TableKategori create(String query,FormTable parent){
+        return new TableKategori(query,parent,null);
     }
     
-    public TableKategori(String query,FormTableLookup parent){
-        this.parent=parent;
-        this.parent.setTitle(this.title);
-        this.parent.setFilterAction(new Runnable() {
-            @Override
-            public void run() {
-                TableKategori.this.dbObject.filter(TableKategori.this.parent.getSearch().getText());
-            }
-        });
+    public TableKategori(String query,FormTable parentTable,FormTableLookup parentTableLookup){
+        this.parentTable=parentTable;
+        this.parentTableLookup=parentTableLookup;
+        
+        if(parentTableLookup!=null){
+            this.parentTableLookup.setTitle(this.title);
+            this.parentTableLookup.setFilterAction(new Runnable() {
+                @Override
+                public void run() {
+                    TableKategori.this.dbObject.filter(TableKategori.this.parentTableLookup.getSearch().getText());
+                }
+            });
+        }
+        
+        if(parentTable!=null){
+            this.parentTable.setTitle(this.title);
+            this.parentTable.setFilterAction(new Runnable() {
+                @Override
+                public void run() {
+                    TableKategori.this.dbObject.filter(TableKategori.this.parentTable.getSearch().getText());
+                }
+            });
+        }
         this.queryView=query;
         
         //Object[] boolImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
@@ -77,7 +96,14 @@ public class TableKategori implements JMFormInterface{
         
         this.table=JMPCTable.create(this.dbObject);
         JScrollPane sp=new JScrollPane(this.table);
-        JPanel pnlTable=parent.getPanelTable();
+        
+        JPanel pnlTable;
+        if(this.parentTable!=null){
+            pnlTable=this.parentTable.getPanelTable();
+        }else{
+            pnlTable=this.parentTableLookup.getPanelTable();
+        }
+        
         pnlTable.removeAll();
         pnlTable.setLayout(new BorderLayout());
         pnlTable.add(sp,BorderLayout.CENTER);
@@ -96,7 +122,15 @@ public class TableKategori implements JMFormInterface{
         this.btnGroup.getBtnPrev().setText(R.label("DB_PREV"));
         
         
-        JPanel pnlButtons=parent.getPanelButtons();
+        JPanel pnlButtons;
+        if(this.parentTable!=null){
+            pnlButtons=this.parentTable.getPanelButtons();
+        }else{
+            pnlButtons=this.parentTableLookup.getPanelButtons();
+        }
+        
+        
+        
         pnlButtons.removeAll();
         pnlButtons.setLayout(new BorderLayout());
         pnlButtons.add(this.btnGroup.getEditorPanel(),BorderLayout.WEST);
@@ -131,27 +165,30 @@ public class TableKategori implements JMFormInterface{
                 TableKategori.this.selectedRow=null;
             }
         });
-        this.parent.setOkCancelRunnables(okCancelRunnables);
-        this.parent.setVisible(true);
+        this.parentTableLookup.setOkCancelRunnables(okCancelRunnables);
+        this.parentTableLookup.setVisible(true);
         return this.selectedRow;
     }
     
     private void lockAccess(){
-        this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
-        this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
-        this.btnGroup.getBtnEdit().setVisible(Global.getEditor());
-        this.btnGroup.getBtnSave().setVisible(Global.getEditor());
-        this.btnGroup.getBtnCancel().setVisible(Global.getEditor());
-        this.btnGroup.getBtnPrint().setVisible(Global.getEditor());
+        this.btnGroup.getBtnAdd().setVisible(false);//Global.getEditor()
+        this.btnGroup.getBtnDelete().setVisible(false);
+        this.btnGroup.getBtnEdit().setVisible(false);
+        this.btnGroup.getBtnSave().setVisible(false);
+        this.btnGroup.getBtnCancel().setVisible(false);
+        this.btnGroup.getBtnPrint().setVisible(false);
+        this.btnGroup.getBtnView().setVisible(false);
+        this.btnGroup.getBtnRefresh().setVisible(false);
     }
     
     private void openInput(boolean editing, boolean adding){
         //InputOPD.create(TablePengadaan.this.dbObject,parent,editing,adding);
-        InputItem.create(TableKategori.this.dbObject,parent,editing,adding);
+        //InputItem.create(TableKategori.this.dbObject,parent,editing,adding);
     }
     
     private void selectThis(){
-        this.parent.closeMe(true);
+        if(this.parentTableLookup==null)return;
+        this.parentTableLookup.closeMe(true);
     }
     
     
@@ -248,7 +285,7 @@ public class TableKategori implements JMFormInterface{
     }
 
     @Override
-    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted, String extra) {
         
     }
 
@@ -303,7 +340,7 @@ public class TableKategori implements JMFormInterface{
     }
 
     @Override
-    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterCanceled(JMRow newCurrentRow, boolean canceled, JMRow canceledRow) {
         
     }
 

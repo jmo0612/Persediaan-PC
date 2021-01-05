@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package persediaanpc.tables;
+import com.thowo.jmjavaframework.JMDate;
 import persediaanpc.Global;
 import persediaanpc.R;
 import com.thowo.jmjavaframework.JMFormInterface;
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
@@ -24,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import persediaanpc.FormTable;
 import persediaanpc.FormTableLookup;
 
 
@@ -40,23 +43,43 @@ public class TableItem implements JMFormInterface{
     private final JMPCTable table;
     private final JMPCDBButtonGroup btnGroup;
     private final List<Integer> primaryKeys;
-    private final FormTableLookup parent;
+    private final FormTableLookup parentTableLookup;
+    private final FormTable parentTable;
     
     private JMRow selectedRow=null;
     
     public static TableItem create(String query,FormTableLookup parent){
-        return new TableItem(query,parent);
+        return new TableItem(query,null,parent);
     }
     
-    public TableItem(String query,FormTableLookup parent){
-        this.parent=parent;
-        this.parent.setTitle(this.title);
-        this.parent.setFilterAction(new Runnable() {
-            @Override
-            public void run() {
-                TableItem.this.dbObject.filter(TableItem.this.parent.getSearch().getText());
-            }
-        });
+    public static TableItem create(String query,FormTable parent){
+        return new TableItem(query,parent,null);
+    }
+    
+    public TableItem(String query,FormTable parentTable,FormTableLookup parentTableLookup){
+        this.parentTable=parentTable;
+        this.parentTableLookup=parentTableLookup;
+        
+        if(parentTableLookup!=null){
+            this.parentTableLookup.setTitle(this.title);
+            this.parentTableLookup.setFilterAction(new Runnable() {
+                @Override
+                public void run() {
+                    TableItem.this.dbObject.filter(TableItem.this.parentTableLookup.getSearch().getText());
+                }
+            });
+        }
+        
+        if(parentTable!=null){
+            this.parentTable.setTitle(this.title);
+            this.parentTable.setFilterAction(new Runnable() {
+                @Override
+                public void run() {
+                    TableItem.this.dbObject.filter(TableItem.this.parentTable.getSearch().getText());
+                }
+            });
+        }
+        
         this.queryView=query;
         
         //Object[] boolImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
@@ -81,6 +104,7 @@ public class TableItem implements JMFormInterface{
         excluded.add(4);
         this.dbObject.excludeColumnsFromUpdate(excluded);
         
+        
         this.dbObject.addInterface(this);
         this.dbObject.setName("p_tb_item");
         this.primaryKeys=new ArrayList();
@@ -89,7 +113,14 @@ public class TableItem implements JMFormInterface{
         
         this.table=JMPCTable.create(this.dbObject);
         JScrollPane sp=new JScrollPane(this.table);
-        JPanel pnlTable=parent.getPanelTable();
+        
+        JPanel pnlTable;
+        if(this.parentTable!=null){
+            pnlTable=this.parentTable.getPanelTable();
+        }else{
+            pnlTable=this.parentTableLookup.getPanelTable();
+        }
+        
         pnlTable.removeAll();
         pnlTable.setLayout(new BorderLayout());
         pnlTable.add(sp,BorderLayout.CENTER);
@@ -107,8 +138,13 @@ public class TableItem implements JMFormInterface{
         this.btnGroup.getBtnNext().setText(R.label("DB_NEXT"));
         this.btnGroup.getBtnPrev().setText(R.label("DB_PREV"));
         
+        JPanel pnlButtons;
+        if(this.parentTable!=null){
+            pnlButtons=this.parentTable.getPanelButtons();
+        }else{
+            pnlButtons=this.parentTableLookup.getPanelButtons();
+        }
         
-        JPanel pnlButtons=parent.getPanelButtons();
         pnlButtons.removeAll();
         pnlButtons.setLayout(new BorderLayout());
         pnlButtons.add(this.btnGroup.getEditorPanel(),BorderLayout.WEST);
@@ -130,6 +166,7 @@ public class TableItem implements JMFormInterface{
     }
     
     public JMRow select(){
+        if(this.parentTableLookup==null)return null;
         List<Runnable> okCancelRunnables=new ArrayList();
         okCancelRunnables.add(new Runnable() {
             @Override
@@ -143,8 +180,8 @@ public class TableItem implements JMFormInterface{
                 TableItem.this.selectedRow=null;
             }
         });
-        this.parent.setOkCancelRunnables(okCancelRunnables);
-        this.parent.setVisible(true);
+        this.parentTableLookup.setOkCancelRunnables(okCancelRunnables);
+        this.parentTableLookup.setVisible(true);
         return this.selectedRow;
     }
     
@@ -159,11 +196,13 @@ public class TableItem implements JMFormInterface{
     
     private void openInput(boolean editing, boolean adding){
         //InputOPD.create(TablePengadaan.this.dbObject,parent,editing,adding);
-        InputItem.create(TableItem.this.dbObject,parent,editing,adding);
+        if(this.parentTable!=null)InputItem.create(TableItem.this.dbObject,this.parentTable,editing,adding);
+        if(this.parentTableLookup!=null)InputItem.create(TableItem.this.dbObject,this.parentTableLookup,editing,adding);
     }
     
     private void selectThis(){
-        this.parent.closeMe(true);
+        if(this.parentTableLookup==null)return;
+        this.parentTableLookup.closeMe(true);
     }
     
     
@@ -182,7 +221,9 @@ public class TableItem implements JMFormInterface{
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode()==e.VK_ENTER){
-                    TableItem.this.selectThis();
+                    if(TableItem.this.parentTableLookup!=null){
+                        TableItem.this.selectThis();
+                    }else TableItem.this.openInput(false,false);
                 }
             }
         });
@@ -191,7 +232,9 @@ public class TableItem implements JMFormInterface{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2 && !e.isConsumed()){
-                    TableItem.this.selectThis();
+                    if(TableItem.this.parentTableLookup!=null){
+                        TableItem.this.selectThis();
+                    }else TableItem.this.openInput(false,false);
                 }
             }
 
@@ -251,16 +294,34 @@ public class TableItem implements JMFormInterface{
         };
     }
 
-    
+    public static String newId(){
+        JMDate d=JMDate.now();
+        String id="ITEM__"+d.getYearFull()
+                +JMFormatCollection.leadingZero(d.getMonth(), 2)
+                +JMFormatCollection.leadingZero(d.getDayOfMonth(), 2)
+                +JMFormatCollection.leadingZero(d.getHour24Int(), 2)
+                +JMFormatCollection.leadingZero(d.getMinuteInt(), 2)
+                +JMFormatCollection.leadingZero(d.getSecondInt(), 2);
+        JMTable tmp=JMTable.create("select id_item from p_tb_item where id_item like '"+id+"%' order by id_item desc limit 1", JMTable.DBTYPE_MYSQL);
+        int nInt=1;
+        if(!tmp.isEmpty()){
+            String tmpId=tmp.firstRow(false).getCells().get(0).getDBValue();
+            tmpId=tmpId.substring(id.length());
+            nInt=JMFormatCollection.strToInteger(tmpId)+1;
+        }
+        //JMFunctions.traceAndShow(id+JMFormatCollection.leadingZero(nInt, 6));
+        return id+JMFormatCollection.leadingZero(nInt, 6);
+    }
     
 
     @Override
     public void actionAfterAdded(JMRow rowAdded) {
-        
+        this.selectedRow=rowAdded;
+        rowAdded.setValueFromString(0, this.newId()); 
     }
 
     @Override
-    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted, String extra) {
         
     }
 
@@ -315,7 +376,7 @@ public class TableItem implements JMFormInterface{
     }
 
     @Override
-    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterCanceled(JMRow newCurrentRow, boolean canceled, JMRow canceledRow) {
         
     }
 

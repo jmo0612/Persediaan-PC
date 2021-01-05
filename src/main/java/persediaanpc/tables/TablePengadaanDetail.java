@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package persediaanpc.tables;
+import com.thowo.jmjavaframework.JMDate;
 import persediaanpc.Global;
 import persediaanpc.R;
 import com.thowo.jmjavaframework.JMFormInterface;
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
@@ -43,11 +45,14 @@ public class TablePengadaanDetail implements JMFormInterface{
     private final List<Integer> primaryKeys;
     private final FormDetail parent;
     
+    private InputPengadaan pengadaan;
+    
     public static TablePengadaanDetail create(String query,InputPengadaan pengadaan){
         return new TablePengadaanDetail(query,pengadaan);
     }
     
     public TablePengadaanDetail(String query,InputPengadaan pengadaan){
+        this.pengadaan=pengadaan;
         this.parent=pengadaan.getDetailForm();
         this.parent.setTitle(this.title);
         this.queryView=query;
@@ -117,26 +122,28 @@ public class TablePengadaanDetail implements JMFormInterface{
             this.btnGroup.stateInit();
         }
         
-        this.lockAccess();
+        this.lockAccess(false);
         
         
         this.btnGroup.getBtnPrint().setVisible(false);
         
     }
     
-    private void lockAccess(){
-        this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
-        this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
-        this.btnGroup.getBtnEdit().setVisible(Global.getEditor());
-        this.btnGroup.getBtnSave().setVisible(Global.getEditor());
-        this.btnGroup.getBtnCancel().setVisible(Global.getEditor());
+    public void lockAccess(boolean editable){
+        this.btnGroup.getBtnAdd().setVisible(Global.getEditor() && editable);
+        this.btnGroup.getBtnDelete().setVisible(Global.getEditor() && editable);
+        this.btnGroup.getBtnEdit().setVisible(Global.getEditor() && editable);
+        this.btnGroup.getBtnSave().setVisible(Global.getEditor() && editable);
+        this.btnGroup.getBtnCancel().setVisible(Global.getEditor() && editable);
         this.btnGroup.getBtnPrint().setVisible(Global.getEditor());
     }
+    
     
     private void openInput(boolean editing, boolean adding){
         //InputOPD.create(TablePengadaanDetail.this.dbObject,parent,editing,adding);
         InputPengadaanDetail.create(TablePengadaanDetail.this.dbObject,parent,editing,adding);
     }
+    
     
     
     private void addListener(){
@@ -223,22 +230,40 @@ public class TablePengadaanDetail implements JMFormInterface{
         };
     }
 
-    
+    public String newId(){
+        JMDate d=JMDate.now();
+        String id="DMR___"+this.pengadaan.getCurIdMutasi()+d.getYearFull()
+                +JMFormatCollection.leadingZero(d.getMonth(), 2)
+                +JMFormatCollection.leadingZero(d.getDayOfMonth(), 2)
+                +JMFormatCollection.leadingZero(d.getHour24Int(), 2)
+                +JMFormatCollection.leadingZero(d.getMinuteInt(), 2)
+                +JMFormatCollection.leadingZero(d.getSecondInt(), 2);
+        JMTable tmp=JMTable.create("select id_det_mutasi_real from p_tb_mutasi_det_real where id_det_mutasi_real like '"+id+"%' order by id_det_mutasi_real desc limit 1", JMTable.DBTYPE_MYSQL);
+        int nInt=1;
+        if(!tmp.isEmpty()){
+            String tmpId=tmp.firstRow(false).getCells().get(0).getDBValue();
+            tmpId=tmpId.substring(id.length());
+            nInt=JMFormatCollection.strToInteger(tmpId)+1;
+        }
+        //JMFunctions.traceAndShow(id+JMFormatCollection.leadingZero(nInt, 6));
+        return id+JMFormatCollection.leadingZero(nInt, 6);
+    }
     
 
     @Override
     public void actionAfterAdded(JMRow rowAdded) {
-        
+        rowAdded.setValueFromString(0, this.newId()); 
+        rowAdded.setValueFromString(1, this.pengadaan.getCurIdMutasi()); 
     }
 
     @Override
-    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted, String extra) {
         
     }
 
     @Override
     public void actionAfterSaved(String updateQuery,boolean saved) {
-        
+        this.pengadaan.overrideTotal();
     }
 
     @Override
@@ -287,7 +312,7 @@ public class TablePengadaanDetail implements JMFormInterface{
     }
 
     @Override
-    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterCanceled(JMRow newCurrentRow, boolean canceled, JMRow canceledRow) {
         
     }
 

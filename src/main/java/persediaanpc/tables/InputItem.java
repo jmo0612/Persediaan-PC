@@ -5,9 +5,11 @@
  */
 package persediaanpc.tables;
 
+import com.thowo.jmjavaframework.JMDate;
 import persediaanpc.Global;
 import persediaanpc.R;
 import com.thowo.jmjavaframework.JMFormInterface;
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.table.JMRow;
 import com.thowo.jmjavaframework.table.JMTable;
@@ -23,6 +25,7 @@ import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 import persediaanpc.FormInput;
+import persediaanpc.FormTable;
 import persediaanpc.FormTableLookup;
 import persediaanpc.FormTableLookup;
 import persediaanpc.util.QueryHelperPersediaan;
@@ -34,7 +37,8 @@ public class InputItem implements JMFormInterface {
     private final String title=R.label("TITLE_ITEM");
     private final JMTable table;
     private final FormInput form;
-    private final FormTableLookup parent;
+    private final FormTableLookup parentTableLookup;
+    private final FormTable parentTable;
     
     private JMPCInputStringTFWeblaf fIdItem;
     private JMPCInputStringTFWeblafBtn fKetKat;
@@ -49,15 +53,19 @@ public class InputItem implements JMFormInterface {
     private boolean editMode=false;
     private boolean formClosing=false;
     
-    TablePengadaanDetail detPengadaan;
     
     public static InputItem create(JMTable table,FormTableLookup parent,boolean editing,boolean adding){
-        return new InputItem(table,parent,editing,adding);
+        return new InputItem(table,null,parent,editing,adding);
     }
     
-    public InputItem(JMTable table,FormTableLookup parent,boolean editing,boolean adding){
+    public static InputItem create(JMTable table,FormTable parent,boolean editing,boolean adding){
+        return new InputItem(table,parent,null,editing,adding);
+    }
+    
+    public InputItem(JMTable table,FormTable parentTable,FormTableLookup parentTableLookup,boolean editing,boolean adding){
         
-        this.parent=parent;
+        this.parentTable=parentTable;
+        this.parentTableLookup=parentTableLookup;
         this.form=new FormInput(null,true);
         this.form.setTitle(this.title);
         this.table=table;
@@ -83,6 +91,7 @@ public class InputItem implements JMFormInterface {
         this.view(editing,adding);
     }
     
+    
     public void view(boolean editing,boolean adding){
         int width=400;
         boolean horizontal=true;
@@ -92,7 +101,7 @@ public class InputItem implements JMFormInterface {
         this.fTotalStock=JMPCInputStringTFWeblaf.create(R.label("TOTAL_STOCK"),R.label("PROMPT_TOTAL_STOCK"), 20, width, horizontal).setEditable(false);
         this.fBidangStock=JMPCInputStringTFWeblaf.create(R.label("BIDANG_STOCK"),R.label("PROMPT_BIDANG_STOCK"), 20, width, horizontal).setEditable(false);
         this.fSatuan=JMPCInputStringTFWeblaf.create(R.label("SATUAN"),R.label("PROMPT_SATUAN"), 20, width, horizontal).setEditable(true);
-        this.fIdKat=JMPCInputStringTFWeblaf.create(R.label("ID_KAT"),R.label("PROMPT_ID_KAT"), 20, width, horizontal).setEditable(false);
+        this.fIdKat=JMPCInputStringTFWeblaf.create(R.label("ID_KAT"),R.label("PROMPT_ID_KAT"), 20, width, horizontal).setEditable(true);
         
 
         this.table.setFormInterface(this.fIdItem, 0,true);
@@ -153,14 +162,15 @@ public class InputItem implements JMFormInterface {
                 TableKategori tbKat=TableKategori.create("select * from p_ref_kat", frmLookKat);
                 JMRow res=tbKat.select();
                 if(res!=null){
-                    InputItem.this.fIdKat.setText(res.getCells().get(0).getDBValue());
-                    InputItem.this.fKetKat.setText(res.getCells().get(1).getDBValue());
+                    InputItem.this.row.setValueFromString(6, res.getCells().get(0).getDBValue()); 
+                    InputItem.this.row.setValueFromString(1, res.getCells().get(1).getDBValue()); 
                 }
             }
         });
         
         
         form.setVisible(true);
+        this.table.removeInterface(this);
     }
     
     
@@ -255,7 +265,7 @@ public class InputItem implements JMFormInterface {
     }
 
     @Override
-    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted, String extra) {
         this.setEditMode(false);
         this.row=this.table.getCurrentRow();
     }
@@ -321,7 +331,7 @@ public class InputItem implements JMFormInterface {
     }
 
     @Override
-    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterCanceled(JMRow newCurrentRow, boolean canceled, JMRow canceledRow) {
         if(this.formClosing){
             if(canceled){
                 this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -330,7 +340,7 @@ public class InputItem implements JMFormInterface {
             }
         }else{
             this.setEditMode(!canceled);
-            if(canceled)this.row=rowCanceled;
+            if(canceled)this.row=newCurrentRow;
         }
     }
 

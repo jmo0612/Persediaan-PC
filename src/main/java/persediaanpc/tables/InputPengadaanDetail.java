@@ -156,14 +156,17 @@ public class InputPengadaanDetail implements JMFormInterface {
                 TableItem tbItem=TableItem.create(QueryHelperPersediaan.qListItemForBidangFromDate(Global.getCurDate().dateTimeDB(), Global.getCurIdBidang()), frmLookItem);
                 JMRow res=tbItem.select();
                 if(res!=null){
-                    InputPengadaanDetail.this.fIdItem.setText(res.getCells().get(0).getDBValue());
-                    InputPengadaanDetail.this.fNmItem.setText(res.getCells().get(2).getDBValue());
+                    InputPengadaanDetail.this.row.setValueFromString(2, res.getCells().get(0).getDBValue()); 
+                    InputPengadaanDetail.this.row.setValueFromString(3, res.getCells().get(2).getDBValue()); 
+                    InputPengadaanDetail.this.row.setValueFromString(5, res.getCells().get(5).getDBValue()); 
                 }
             }
         });
         
         
         form.setVisible(true);
+        
+        this.table.removeInterface(this);
     }
     
     
@@ -252,6 +255,13 @@ public class InputPengadaanDetail implements JMFormInterface {
     }
     
     
+    private void updateCurentSubtotal(){
+        double q=this.row.getCells().get(4).getValueDouble();
+        double p=this.row.getCells().get(6).getValueDouble();
+        double s=q*p;
+        this.row.setValueFromString(7, String.valueOf(s));
+    }
+    
     
     @Override
     public void actionAfterAdded(JMRow rowAdded) {
@@ -260,13 +270,14 @@ public class InputPengadaanDetail implements JMFormInterface {
     }
 
     @Override
-    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted, String extra) {
         this.setEditMode(false);
         this.row=this.table.getCurrentRow();
     }
 
     @Override
     public void actionAfterSaved(String updateQuery,boolean saved) {
+        this.updateCurentSubtotal();
         this.setEditMode(!saved);
         this.btnGroup.stateNav();
     }
@@ -326,7 +337,7 @@ public class InputPengadaanDetail implements JMFormInterface {
     }
 
     @Override
-    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterCanceled(JMRow newCurrentRow, boolean canceled, JMRow canceledRow) {
         if(this.formClosing){
             if(canceled){
                 this.form.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
@@ -335,7 +346,7 @@ public class InputPengadaanDetail implements JMFormInterface {
             }
         }else{
             this.setEditMode(!canceled);
-            if(canceled)this.row=rowCanceled;
+            if(canceled)this.row=newCurrentRow;
         }
     }
 

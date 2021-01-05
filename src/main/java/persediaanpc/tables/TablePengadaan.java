@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package persediaanpc.tables;
+import com.thowo.jmjavaframework.JMDate;
 import persediaanpc.Global;
 import persediaanpc.R;
 import com.thowo.jmjavaframework.JMFormInterface;
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.db.JMResultSet;
 import com.thowo.jmjavaframework.db.JMResultSetStyle;
@@ -25,6 +27,8 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import persediaanpc.FormTable;
+import persediaanpc.FormTableLookup;
+import persediaanpc.util.QueryHelperPersediaan;
 
 
 /**
@@ -40,21 +44,44 @@ public class TablePengadaan implements JMFormInterface{
     private final JMPCTable table;
     private final JMPCDBButtonGroup btnGroup;
     private final List<Integer> primaryKeys;
-    private final FormTable parent;
+    private final FormTableLookup parentTableLookup;
+    private final FormTable parentTable;
     
-    public static TablePengadaan create(String query,FormTable parent){
-        return new TablePengadaan(query,parent);
+    private JMRow selectedRow=null;
+    private JMTable detailBackup;
+    
+    
+    public static TablePengadaan create(String query,FormTableLookup parent){
+        return new TablePengadaan(query,null,parent);
     }
     
-    public TablePengadaan(String query,FormTable parent){
-        this.parent=parent;
-        this.parent.setTitle(this.title);
-        this.parent.setFilterAction(new Runnable() {
-            @Override
-            public void run() {
-                TablePengadaan.this.dbObject.filter(TablePengadaan.this.parent.getSearch().getText());
-            }
-        });
+    public static TablePengadaan create(String query,FormTable parent){
+        return new TablePengadaan(query,parent,null);
+    }
+    
+    public TablePengadaan(String query,FormTable parentTable,FormTableLookup parentTableLookup){
+        this.parentTable=parentTable;
+        this.parentTableLookup=parentTableLookup;
+        
+        if(parentTableLookup!=null){
+            this.parentTableLookup.setTitle(this.title);
+            this.parentTableLookup.setFilterAction(new Runnable() {
+                @Override
+                public void run() {
+                    TablePengadaan.this.dbObject.filter(TablePengadaan.this.parentTableLookup.getSearch().getText());
+                }
+            });
+        }
+        
+        if(parentTable!=null){
+            this.parentTable.setTitle(this.title);
+            this.parentTable.setFilterAction(new Runnable() {
+                @Override
+                public void run() {
+                    TablePengadaan.this.dbObject.filter(TablePengadaan.this.parentTable.getSearch().getText());
+                }
+            });
+        }
         this.queryView=query;
         
         Object[] boolImg={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
@@ -132,7 +159,15 @@ public class TablePengadaan implements JMFormInterface{
         
         this.table=JMPCTable.create(this.dbObject);
         JScrollPane sp=new JScrollPane(this.table);
-        JPanel pnlTable=parent.getPanelTable();
+        
+        JPanel pnlTable;
+        if(this.parentTable!=null){
+            pnlTable=this.parentTable.getPanelTable();
+        }else{
+            pnlTable=this.parentTableLookup.getPanelTable();
+        }
+        
+        
         pnlTable.removeAll();
         pnlTable.setLayout(new BorderLayout());
         pnlTable.add(sp,BorderLayout.CENTER);
@@ -151,7 +186,14 @@ public class TablePengadaan implements JMFormInterface{
         this.btnGroup.getBtnPrev().setText(R.label("DB_PREV"));
         
         
-        JPanel pnlButtons=parent.getPanelButtons();
+        JPanel pnlButtons;
+        if(this.parentTable!=null){
+            pnlButtons=this.parentTable.getPanelButtons();
+        }else{
+            pnlButtons=this.parentTableLookup.getPanelButtons();
+        }
+        
+        
         pnlButtons.removeAll();
         pnlButtons.setLayout(new BorderLayout());
         pnlButtons.add(this.btnGroup.getEditorPanel(),BorderLayout.WEST);
@@ -172,6 +214,26 @@ public class TablePengadaan implements JMFormInterface{
         
     }
     
+    public JMRow select(){
+        if(this.parentTableLookup==null)return null;
+        List<Runnable> okCancelRunnables=new ArrayList();
+        okCancelRunnables.add(new Runnable() {
+            @Override
+            public void run() {
+                TablePengadaan.this.selectedRow=TablePengadaan.this.dbObject.getCurrentRow();
+            }
+        });
+        okCancelRunnables.add(new Runnable() {
+            @Override
+            public void run() {
+                TablePengadaan.this.selectedRow=null;
+            }
+        });
+        this.parentTableLookup.setOkCancelRunnables(okCancelRunnables);
+        this.parentTableLookup.setVisible(true);
+        return this.selectedRow;
+    }
+    
     private void lockAccess(){
         this.btnGroup.getBtnAdd().setVisible(Global.getEditor());
         this.btnGroup.getBtnDelete().setVisible(Global.getEditor());
@@ -183,7 +245,37 @@ public class TablePengadaan implements JMFormInterface{
     
     private void openInput(boolean editing, boolean adding){
         //InputOPD.create(TablePengadaan.this.dbObject,parent,editing,adding);
-        InputPengadaan.create(TablePengadaan.this.dbObject,parent,editing,adding);
+        if(this.parentTable!=null)InputPengadaan.create(TablePengadaan.this.dbObject,this.parentTable,editing,adding);
+        if(this.parentTableLookup!=null)InputPengadaan.create(TablePengadaan.this.dbObject,this.parentTableLookup,editing,adding);
+    }
+    
+    private void selectThis(){
+        if(this.parentTableLookup==null)return;
+        this.parentTableLookup.closeMe(true);
+    }
+    
+    private void backupDetail(){
+        this.detailBackup=JMTable.create(QueryHelperPersediaan.qDetailPengadaan(this.selectedRow.getCells().get(0).getDBValue()), JMTable.DBTYPE_MYSQL);
+        this.detailBackup.setName("p_tb_mutasi_det_real");
+        List<Integer> excluded=new ArrayList();
+        excluded.add(3);
+        excluded.add(5);
+        excluded.add(7);
+        this.detailBackup.excludeColumnsFromUpdate(excluded);
+    }
+    
+    private void restoreDetail(JMRow canceledRow){
+        JMFunctions.trace("delete from p_tb_mutasi_det_real where id_mutasi='"+canceledRow.getCells().get(0).getDBValue()+"'");
+        JMFunctions.getCurrentConnection().queryUpdateMySQL("delete from p_tb_mutasi_det_real where id_mutasi='"+canceledRow.getCells().get(0).getDBValue()+"'", false);
+        if(this.detailBackup==null)return;
+        if(!this.detailBackup.isEmpty()){
+            String q="";
+            this.detailBackup.firstRow(false);
+            do{
+                JMFunctions.getCurrentConnection().queryUpdateMySQL(this.detailBackup.getCurrentRow().getUpdateSQL(), false);
+            }while(this.detailBackup.nextRow(false)!=null);
+        }
+        this.detailBackup=null;
     }
     
     
@@ -202,7 +294,9 @@ public class TablePengadaan implements JMFormInterface{
             @Override
             public void keyReleased(KeyEvent e) {
                 if(e.getKeyCode()==e.VK_ENTER){
-                    TablePengadaan.this.openInput(false,false);
+                    if(TablePengadaan.this.parentTableLookup!=null){
+                        TablePengadaan.this.selectThis();
+                    }else TablePengadaan.this.openInput(false,false);
                 }
             }
         });
@@ -211,7 +305,9 @@ public class TablePengadaan implements JMFormInterface{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if(e.getClickCount()==2 && !e.isConsumed()){
-                    TablePengadaan.this.openInput(false,false);
+                    if(TablePengadaan.this.parentTableLookup!=null){
+                        TablePengadaan.this.selectThis();
+                    }else TablePengadaan.this.openInput(false,false);
                 }
             }
 
@@ -271,27 +367,68 @@ public class TablePengadaan implements JMFormInterface{
         };
     }
 
-    
+    public static String newId(){
+        JMDate d=JMDate.now();
+        String id="MUT___"+d.getYearFull()
+                +JMFormatCollection.leadingZero(d.getMonth(), 2)
+                +JMFormatCollection.leadingZero(d.getDayOfMonth(), 2)
+                +JMFormatCollection.leadingZero(d.getHour24Int(), 2)
+                +JMFormatCollection.leadingZero(d.getMinuteInt(), 2)
+                +JMFormatCollection.leadingZero(d.getSecondInt(), 2);
+        JMTable tmp=JMTable.create("select id_mutasi from p_tb_mutasi where id_mutasi like '"+id+"%' order by id_mutasi desc limit 1", JMTable.DBTYPE_MYSQL);
+        int nInt=1;
+        if(!tmp.isEmpty()){
+            String tmpId=tmp.firstRow(false).getCells().get(0).getDBValue();
+            tmpId=tmpId.substring(id.length());
+            nInt=JMFormatCollection.strToInteger(tmpId)+1;
+        }
+        //JMFunctions.traceAndShow(id+JMFormatCollection.leadingZero(nInt, 6));
+        return id+JMFormatCollection.leadingZero(nInt, 6);
+    }
     
 
     @Override
     public void actionAfterAdded(JMRow rowAdded) {
-        
+        this.selectedRow=rowAdded;
+        rowAdded.setValueFromString(0, this.newId()); 
+        rowAdded.setValueFromString(3, Global.liveTimer.getDate().dateTimeDB()); 
+        rowAdded.setValueFromString(5, "MUTASI_001"); 
+        rowAdded.setValueFromString(8, "Kantor Dinas PUPR Minut"); 
+        rowAdded.setValueFromString(10, "Dinas Pekerjaan Umum dan Penataan Ruang"); 
+        JMTable tmp=JMTable.create("select * from p_tb_pj_barang where id_jab_barang='PgunaB'", JMTable.DBTYPE_MYSQL);
+        rowAdded.setValueFromString(11, tmp.firstRow(false).getCells().get(2).getDBValue()); 
+        rowAdded.setValueFromString(12, tmp.firstRow(false).getCells().get(3).getDBValue()); 
+        rowAdded.setValueFromString(13, tmp.firstRow(false).getCells().get(1).getDBValue()); 
+        tmp=JMTable.create("select * from p_tb_pj_barang where id_jab_barang='TUB'", JMTable.DBTYPE_MYSQL);
+        rowAdded.setValueFromString(14, tmp.firstRow(false).getCells().get(2).getDBValue()); 
+        rowAdded.setValueFromString(15, tmp.firstRow(false).getCells().get(3).getDBValue()); 
+        rowAdded.setValueFromString(16, tmp.firstRow(false).getCells().get(1).getDBValue()); 
+        tmp=JMTable.create("select * from p_tb_pj_barang where id_jab_barang='PurusB'", JMTable.DBTYPE_MYSQL);
+        rowAdded.setValueFromString(17, tmp.firstRow(false).getCells().get(2).getDBValue()); 
+        rowAdded.setValueFromString(18, tmp.firstRow(false).getCells().get(3).getDBValue()); 
+        rowAdded.setValueFromString(19, tmp.firstRow(false).getCells().get(1).getDBValue()); 
+        rowAdded.setValueFromString(26, "false");
+        rowAdded.setValueFromString(27, "false"); 
+        this.backupDetail();
     }
 
     @Override
-    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted) {
-        
+    public void actionAfterDeleted(JMRow rowDeleted, boolean deleted, String extra) {
+        if(deleted && extra==null){
+            //JMFunctions.trace("DELETED");
+            JMFunctions.getCurrentConnection().queryUpdateMySQL("delete from p_tb_mutasi_det_real where id_mutasi='"+rowDeleted.getCells().get(0).getDBValue()+"'", false);
+            this.detailBackup=null;
+        }
     }
 
     @Override
     public void actionAfterSaved(String updateQuery,boolean saved) {
-        
+        if(saved)this.detailBackup=null;
     }
 
     @Override
     public void actionAfterEdited(JMRow rowEdited) {
-        
+        this.backupDetail();
     }
 
     @Override
@@ -301,7 +438,7 @@ public class TablePengadaan implements JMFormInterface{
 
     @Override
     public void actionAfterRefreshed(JMRow rowRefreshed) {
-        
+        this.detailBackup=null;
     }
 
     @Override
@@ -311,37 +448,45 @@ public class TablePengadaan implements JMFormInterface{
 
     @Override
     public void actionAfterMovedNext(JMRow nextRow) {
-        
+        this.selectedRow=nextRow;
+        this.detailBackup=null;
     }
 
     @Override
     public void actionAfterMovedPrev(JMRow prevRow) {
-        
+        this.selectedRow=prevRow;
+        this.detailBackup=null;
     }
 
     @Override
     public void actionAfterMovedFirst(JMRow firstRow) {
-        
+        this.selectedRow=firstRow;
+        this.detailBackup=null;
     }
 
     @Override
     public void actionAfterMovedLast(JMRow lastRow) {
-        
+        this.selectedRow=lastRow;
+        this.detailBackup=null;
     }
 
     @Override
     public void actionAfterMovedtoRecord(JMRow currentRow) {
-        
+        this.selectedRow=currentRow;
+        this.detailBackup=null;
     }
 
     @Override
-    public void actionAfterCanceled(JMRow rowCanceled, boolean canceled) {
+    public void actionAfterCanceled(JMRow newCurrentRow, boolean canceled, JMRow canceledRow) {
+        if(canceled){
+            this.restoreDetail(canceledRow);
+        }
         
     }
 
     @Override
     public void actionBeforeRefresh(JMRow rowRefreshed) {
-        
+        this.selectedRow=rowRefreshed;
     }
 
     @Override

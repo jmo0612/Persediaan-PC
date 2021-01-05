@@ -9,6 +9,9 @@ import com.thowo.jmpcframework.component.JMPCFormModal;
 import com.thowo.jmpcframework.component.JMPCTable;
 import com.thowo.jmpcframework.component.form.JMPCInputStringTFWeblaf;
 import java.awt.BorderLayout;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 /**
@@ -17,6 +20,7 @@ import javax.swing.JPanel;
  */
 public class FormTable extends JMPCFormModal {
     private JMPCInputStringTFWeblaf search;
+    private JLabel searchIndicator=new JLabel("FILTER_INDICATOR");
 
     /**
      * Creates new form FormTable
@@ -27,7 +31,35 @@ public class FormTable extends JMPCFormModal {
         
         this.jPanel6.setLayout(new BorderLayout());
         this.search=JMPCInputStringTFWeblaf.create("", R.label("PROMPT_SEARCH"), 15, 20, true);
-        this.jPanel6.add(this.search,BorderLayout.EAST);
+        this.jPanel6.add(this.search,BorderLayout.NORTH);
+        this.jPanel6.add(this.search,BorderLayout.SOUTH);
+        
+        
+        
+        this.search.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                if(!FormTable.this.search.getText().equals("")){
+                
+                }else{
+                
+                }
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                
+            }
+        });
+    }
+    
+    private void showIndicator(boolean show){
+        
     }
     
     public JMPCInputStringTFWeblaf getSearch(){
@@ -86,7 +118,7 @@ public class FormTable extends JMPCFormModal {
             jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel5Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 660, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -103,7 +135,7 @@ public class FormTable extends JMPCFormModal {
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 480, Short.MAX_VALUE)
+            .addGap(0, 364, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
