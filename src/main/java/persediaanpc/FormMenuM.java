@@ -6,7 +6,7 @@
 package persediaanpc;
 
 import com.thowo.jmpcframework.component.JMPCFormModal;
-import persediaanpc.tables.TablePengadaan;
+import persediaanpc.tables.tes.TablePengadaan;
 import persediaanpc.util.QueryHelperPersediaan;
 
 /**

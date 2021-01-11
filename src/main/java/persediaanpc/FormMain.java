@@ -5,15 +5,24 @@
  */
 package persediaanpc;
 
+import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.JMVec2;
+import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCForm;
-import persediaanpc.tables.TableBidang;
-import persediaanpc.tables.TableItem;
-import persediaanpc.tables.TablePBJ;
-import persediaanpc.tables.TablePegawai;
-import persediaanpc.tables.TablePengadaan;
-import persediaanpc.tables.TablePjBrg;
+import java.util.List;
+import persediaanpc.tables.tes.TableBidang;
+import persediaanpc.tables.tes.TableItem;
+import persediaanpc.tables.tes.TablePBJ;
+import persediaanpc.tables.tes.TablePegawai;
+import persediaanpc.tables.tes.TablePengadaan;
+import persediaanpc.tables.tes.TablePjBrg;
+import persediaanpc.tables.TableTes;
+import persediaanpc.tables.TblBidang;
+import persediaanpc.tables.TblItem;
+import persediaanpc.tables.TblPegawai;
+import persediaanpc.tables.TblPengadaan;
+import persediaanpc.tables.TblPjPBJ;
 import persediaanpc.util.LiveTimer;
 import persediaanpc.util.MutasiBuku;
 import persediaanpc.util.QueryHelperPersediaan;
@@ -131,6 +140,11 @@ public class FormMain extends JMPCForm{
         jMenu1.setText("File");
 
         jMenuItem1.setText("Login");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Logout");
@@ -282,37 +296,52 @@ public class FormMain extends JMPCForm{
 
     private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
         // TODO add your handling code here:
+        /*
         FormTable frmPengadaan=new FormTable(null,true);
         TablePengadaan tbPengadaan=TablePengadaan.create(QueryHelperPersediaan.qListPengadaan, frmPengadaan);
         frmPengadaan.setVisible(true);
+        */
+        TblPengadaan.create().show();
     }//GEN-LAST:event_jMenuItem4ActionPerformed
 
     private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
         // TODO add your handling code here:
+        /*
         FormTable frmItem=new FormTable(null,true);
         TableItem tbItem=TableItem.create(QueryHelperPersediaan.qListItemForBidangFromDate(Global.liveTimer.getDate().dateTimeDB(), ""), frmItem);
         frmItem.setVisible(true);
+        */
+        TblItem.create().show();
     }//GEN-LAST:event_jMenuItem17ActionPerformed
 
     private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
         // TODO add your handling code here:
+        /*
         FormTable frmPeg=new FormTable(null,true);
         TablePegawai tbPeg=TablePegawai.create(QueryHelperPersediaan.qPegawai, frmPeg);
         frmPeg.setVisible(true);
+        */
+        TblPegawai.create().show();
     }//GEN-LAST:event_jMenuItem8ActionPerformed
 
     private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
         // TODO add your handling code here:
+        /*
         FormTable frmBid=new FormTable(null,true);
         TableBidang tbBid=TableBidang.create("select * from p_tb_bidang", frmBid);
         frmBid.setVisible(true);
+        */
+        TblBidang.create().show();
     }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
         // TODO add your handling code here:
+        /*
         FormTable frmPBJ=new FormTable(null,true);
         TablePBJ tbPBJ=TablePBJ.create(QueryHelperPersediaan.qPBJ, frmPBJ);
         frmPBJ.setVisible(true);
+        */
+        TblPjPBJ.create().show();
     }//GEN-LAST:event_jMenuItem9ActionPerformed
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
@@ -326,6 +355,22 @@ public class FormMain extends JMPCForm{
         // TODO add your handling code here:
         MutasiBuku.create();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        //TblBidang.create().show();
+        //TblPegawai.create().show();
+        //TableTes.create().show();
+        JMFunctions.writeTableToExistingExcel(
+                JMFunctions.getResourcePath("raw/tes.xlsx").getPath(), 
+                "TES",
+                List.of(2,1,3,4), 
+                List.of(), 
+                5, 
+                JMTable.create(QueryHelperPersediaan.qPegawai, JMTable.DBTYPE_MYSQL), 
+                List.of(0,4,6), 
+                JMFunctions.getDocDir()+"/tes_result.xlsx");
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     /**
      * @param args the command line arguments

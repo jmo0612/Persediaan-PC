@@ -264,4 +264,10 @@ public class QueryHelperPersediaan {
         return tmp.replace("[ID_MUTASI]", idMutasi);
     }
     
+    public static String qKat="SELECT \n" +
+"p_ref_kat.*,\n" +
+"p_ref_tipe.ket_tipe\n" +
+"FROM p_ref_kat,p_ref_tipe WHERE p_ref_kat.id_tipe=p_ref_tipe.id_tipe";
+    
+    
 }

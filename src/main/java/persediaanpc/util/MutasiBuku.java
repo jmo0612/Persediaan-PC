@@ -34,7 +34,7 @@ public class MutasiBuku {
             this.sDate=tmp.firstRow(false).getCells().get(5).getDBValue();
             if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(QueryHelperPersediaan.qDelDetRealFromDate(this.sDate), true))return;
             if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(QueryHelperPersediaan.qResetApprovalFromDate(this.sDate), true))return;
-            JMFunctions.traceAndShow("PAUSED");
+            //JMFunctions.traceAndShow("PAUSED");
             tmp=JMTable.create(QueryHelperPersediaan.qDetRealUnApprovedDebit, JMTable.DBTYPE_MYSQL);
             String str="";
             String str2="";
