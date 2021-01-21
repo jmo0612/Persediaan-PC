@@ -161,7 +161,7 @@ public class QueryHelperPersediaan {
 "(SELECT p_tb_mutasi_det_real.id_det_mutasi_real, p_tb_mutasi_det_real.id_mutasi, p_tb_mutasi_det_real.id_item, p_tb_mutasi_det_real.real_qty, p_tb_mutasi_det_real.real_harga_penerimaan, p_tb_mutasi.tgl_mutasi FROM bmd.p_tb_mutasi AS p_tb_mutasi, bmd.p_tb_mutasi_det_real AS p_tb_mutasi_det_real WHERE p_tb_mutasi.id_mutasi = p_tb_mutasi_det_real.id_mutasi AND p_tb_mutasi.approved = '0' ORDER BY p_tb_mutasi.tgl_mutasi ASC) AS det\n" +
 "GROUP BY id_mutasi";
     
-    public static String qDelDetRealFromDate(String date){
+    public static String qDelDetBukuFromDate(String date){
         String tmp="DELETE p_tb_mutasi_det_buku \n" +
 "FROM p_tb_mutasi_det_buku INNER JOIN p_tb_mutasi\n" +
 "ON p_tb_mutasi_det_buku.id_mutasi=p_tb_mutasi.id_mutasi\n" +

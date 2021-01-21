@@ -5,6 +5,7 @@
  */
 package persediaanpc;
 
+import com.thowo.jmjavaframework.JMDate;
 import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.JMVec2;
@@ -168,6 +169,11 @@ public class FormMain extends JMPCForm{
         jMenu1.add(jSeparator1);
 
         jMenuItem3.setText("Keluar");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem3);
 
         jMenuBar1.add(jMenu1);
@@ -427,6 +433,13 @@ public class FormMain extends JMPCForm{
             }while(tmp.nextRow(false)!=null);
         }else JMFunctions.trace("NDA ADA ISI");
     }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        // TODO add your handling code here:
+        JMDate tmp=JMDate.now();
+        JMFunctions.trace("asli: "+tmp.dateTimeDB());
+        JMFunctions.trace("modif: "+tmp.addSeconds(1).dateTimeDB());
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
 
     /**
      * @param args the command line arguments

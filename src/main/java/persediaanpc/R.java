@@ -40,6 +40,6 @@ public class R {
         if(l==null){
             l=new Locale(langDef,regDef);
         }
-        return ResourceBundle.getBundle("localization/errors",l).getString(var);
+        return ResourceBundle.getBundle("localization/Errors",l).getString(var);
     }
 }

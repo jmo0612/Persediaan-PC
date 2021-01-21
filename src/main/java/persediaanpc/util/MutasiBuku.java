@@ -17,7 +17,8 @@ import persediaanpc.R;
  * @author jimi
  */
 public class MutasiBuku {
-    private String sDate;
+    //private String sDate;
+    private List<String> successMut=new ArrayList();
     
     public static MutasiBuku create(){
         return new MutasiBuku();
@@ -29,18 +30,75 @@ public class MutasiBuku {
         JMFunctions.trace("ABIS");
     }
     
+    
+    
+    
+    private void addMutasi(String idMutasi){
+        for(String s:this.successMut){
+            if(s.equals(idMutasi))return;
+        }
+        this.successMut.add(idMutasi);
+    }
+    
+    private void removeMutasi(String idMutasi){
+        List<String> ret=new ArrayList();
+        for(String s:this.successMut){
+            if(!s.equals(idMutasi)){
+                ret.add(s);
+            }
+        }
+        this.successMut=ret;
+    }
+    
     private void init(){
-        JMTable tmp=JMTable.create(QueryHelperPersediaan.qDetRealUnApproved, JMTable.DBTYPE_MYSQL);
+        boolean success=true;
+        JMTable tmp=JMTable.create("select * from p_tb_mutasi where approved ='0' order by tgl_mutasi asc, id_mutasi asc", JMTable.DBTYPE_MYSQL);
         if(!tmp.isEmpty()){
-            this.sDate=tmp.firstRow(false).getCells().get(5).getDBValue();
-            if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(QueryHelperPersediaan.qDelDetRealFromDate(this.sDate), true))return;
-            if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(QueryHelperPersediaan.qResetApprovalFromDate(this.sDate), true))return;
+            String mut=tmp.firstRow(false).getCells().get(0).getDBValue();
+            JMDate dt=tmp.firstRow(false).getCells().get(1).getValueDate();
+            String dtStr=tmp.firstRow(false).getCells().get(1).getDBValue();
+            JMTable searchTbl=JMTable.create("select * from p_tb_mutasi where tgl_mutasi >='"+dtStr+"' order by tgl_mutasi asc, id_mutasi asc", JMTable.DBTYPE_MYSQL);
+            List<String> muts=new ArrayList();
+            if(!searchTbl.isEmpty()){
+                searchTbl.firstRow(false);
+                boolean found=false;
+                do{
+                    if(found){
+                        //unapproved
+                        muts.add(searchTbl.getCurrentRow().getCells().get(0).getDBValue());
+                    }else{
+                        if(searchTbl.getCurrentRow().getCells().get(1).getDBValue().equals(mut)){
+                            found=true;
+                        }
+                    }
+                }while(searchTbl.nextRow(false)!=null);
+            }else{
+                JMFunctions.errorMessage("ERROR");
+            }
+            if(muts.size()>0){
+                String mutQ="";
+                for(String s:muts){
+                    if(mutQ.equals("")){
+                        mutQ="id_mutasi='"+s+"'";
+                    }else{
+                        mutQ+=" OR id_mutasi='"+s+"'";
+                    }
+                }
+                mutQ="UPDATE p_tb_mutasi SET approved='0' where ("+mutQ+")";
+                String mutQ2="DELETE FROM p_tb_mutasi_det_real where ("+mutQ+")";
+                if(!mutQ.equals(""))if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(mutQ, true))return;
+                if(!mutQ2.equals(""))if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(mutQ2, true))return;
+            }
+            dt.addSeconds(1);
+            //this.sDate=tmp.firstRow(false).getCells().get(5).getDBValue();
+            if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(QueryHelperPersediaan.qDelDetBukuFromDate(dt.dateTimeDB()), true))return;
+            if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(QueryHelperPersediaan.qResetApprovalFromDate(dt.dateTimeDB()), true))return;
             //JMFunctions.traceAndShow("PAUSED");
             tmp=JMTable.create(QueryHelperPersediaan.qDetRealUnApproved, JMTable.DBTYPE_MYSQL);
             
             if(!tmp.isEmpty()){
                 tmp.firstRow(false);
-                String lastIdMut="";
+                List<String> successMut=new ArrayList();
                 do{
                     String curIdDet=tmp.getCurrentRow().getCells().get(0).getDBValue();
                     String curIdMut=tmp.getCurrentRow().getCells().get(1).getDBValue();
@@ -52,7 +110,7 @@ public class MutasiBuku {
                     String curNmItem=tmp.getCurrentRow().getCells().get(7).getDBValue();
                     //JMFunctions.trace(QueryHelperPersediaan.qItemStockNotZero(tglMut, idItem));
                     
-                    
+                    boolean failed=false;
                     if(curDebit){
                         String str="";
                         String str2="";
@@ -99,8 +157,8 @@ public class MutasiBuku {
                         str2="REPLACE INTO p_tb_mutasi_det_buku(id_det_mutasi_buku, id_mutasi, id_subitem, qty, stok_awal, stok_akhir) values"+str2;
                         if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(str, true))return;
                         if(!JMFunctions.getCurrentConnection().queryUpdateMySQL(str2, true))return;
+                        this.addMutasi(curIdMut);
                     }else{
-                        boolean failed=false;
                         JMTable tbStock=JMTable.create(QueryHelperPersediaan.qSubLastBuku(curIdItem, curTglMut,curIdMut), JMTable.DBTYPE_MYSQL);
                         if(!tbStock.isEmpty()){
                             List<String> idSubItem=new ArrayList();
@@ -156,37 +214,29 @@ public class MutasiBuku {
                             //JMFunctions.trace(QueryHelperPersediaan.qSubLastBuku(idItem, tglMut,idMut));
                             failed=true;
                         }
-                        if(!lastIdMut.equals("")){
-                            //NOT FIRST RECORD
-                            if(!lastIdMut.equals(curIdMut)){
-                                //NEW MUTASI
-                                //TO DO SET APPROVED LAST
-                                JMFunctions.getCurrentConnection().queryUpdateMySQL("UPDATE p_tb_mutasi SET approved='1' WHERE id_mutasi='"+lastIdMut+"'", true);
-                                if(!failed){
-                                    //DO NOTHING
-                                    lastIdMut=curIdMut;
-                                }else{
-                                    //UNDO APPROVE MUTASI FROM CURRENT
-                                    break;
-                                }
-                            }else{
-                                //SAME MUTASI
-                                if(!failed){
-                                    //DO NOTHING
-                                    lastIdMut=curIdMut;
-                                }else{
-                                    //UNDO APPROVE MUTASI FROM CURRENT
-                                    break;
-                                }
-                            }
-                        }else{
-                            //FIRST RECORD
-                            lastIdMut=curIdMut;
+                        if(!failed){
+                            this.addMutasi(curIdMut);
+                        }else {
+                            //REMOVE FROM LIST MUT
+                            this.removeMutasi(curIdMut);
+                            JMFunctions.getCurrentConnection().queryUpdateMySQL("delete from p_tb_mutasi_det_buku where id_mutasi='"+curIdMut+"'", true);
+                            break;
                         }
                     }
                 }while(tmp.nextRow(false)!=null);
                 
             }
+            String qApp="";
+            for(String s:this.successMut){
+                if(qApp.equals("")){
+                    qApp="id_mutasi='"+s+"'";
+                }else{
+                    qApp+=" OR id_mutasi='"+s+"'";
+                }
+            }
+            if(qApp.equals(""))return;
+            qApp="UPDATE p_tb_mutasi SET approved='1' WHERE ("+qApp+")";
+            if(!qApp.equals(""))JMFunctions.getCurrentConnection().queryUpdateMySQL(qApp, true);
             /*if(!failedDate.equals("")){
                 JMFunctions.getCurrentConnection().queryUpdateMySQL("UPDATE p_tb_mutasi SET approved='0' WHERE tgl_mutasi>='"+failedDate+"'", true);
                 JMFunctions.traceAndShow("Beberapa Permintaan Barang (sejak "+failedDate+") harus diteliti kembali");
