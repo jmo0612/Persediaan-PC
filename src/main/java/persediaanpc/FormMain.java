@@ -5,12 +5,23 @@
  */
 package persediaanpc;
 
+import com.thowo.jmjavaframework.JMFormatCollection;
 import com.thowo.jmjavaframework.JMFunctions;
 import com.thowo.jmjavaframework.JMVec2;
+import com.thowo.jmjavaframework.report.JMExcel;
+import com.thowo.jmjavaframework.table.JMCell;
 import com.thowo.jmjavaframework.table.JMTable;
 import com.thowo.jmpcframework.JMPCFunctions;
 import com.thowo.jmpcframework.component.JMPCForm;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import persediaanpc.tables.tes.TableBidang;
 import persediaanpc.tables.tes.TableItem;
 import persediaanpc.tables.tes.TablePBJ;
@@ -43,7 +54,7 @@ public class FormMain extends JMPCForm{
         JMPCFunctions.attachImageToAnEmptyPanelOnForm("img/wp.jpg",this.getClass(), this.jPanel3,this);
         this.setExtendedState(MAXIMIZED_BOTH);
         
-        
+        //JMFunctions.trace(JMFormatCollection.capitalizeWord(JMFormatCollection.terbilang(21)));
         
     }
 
@@ -148,6 +159,11 @@ public class FormMain extends JMPCForm{
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Logout");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem2);
         jMenu1.add(jSeparator1);
 
@@ -356,21 +372,61 @@ public class FormMain extends JMPCForm{
         MutasiBuku.create();
     }//GEN-LAST:event_jMenuItem7ActionPerformed
 
+    
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         //TblBidang.create().show();
         //TblPegawai.create().show();
         //TableTes.create().show();
+        
         JMFunctions.writeTableToExistingExcel(
-                JMFunctions.getResourcePath("raw/tes.xlsx").getPath(), 
-                "TES",
-                List.of(2,1,3,4), 
-                List.of(), 
-                5, 
-                JMTable.create(QueryHelperPersediaan.qPegawai, JMTable.DBTYPE_MYSQL), 
-                List.of(0,4,6), 
-                JMFunctions.getDocDir()+"/tes_result.xlsx");
+                JMExcel.RPT_MODE_MASTER_DETAIL, 
+                JMFunctions.getResourcePath("raw/tes3.xlsx").getPath(),
+                JMFunctions.getDocDir()+"/tes_result3.xlsx", 
+                TblPengadaan.create().getTableList()
+                    .setRptXlsExcluded(0)
+                    .setRptXlsSheetNameFromColIndex(4)
+                , 
+                true);
+        
+        
+        /*
+        JMFunctions.writeTableToExistingExcel(
+                JMExcel.RPT_MODE_DETAIL, 
+                JMFunctions.getResourcePath("raw/tes.xlsx").getPath(),
+                JMFunctions.getDocDir()+"/tes_result.xlsx", 
+                TblPegawai.create().getTableList()
+                    .setRptXlsExcluded(0,4,6)
+                    .setRptXlsSheetNameFromColIndex(1)
+                , 
+                true);
+        */
+        /*
+        
+        JMFunctions.writeTableToExistingExcel(
+                JMExcel.RPT_MODE_MASTER, 
+                JMFunctions.getResourcePath("raw/tes2.xlsx").getPath(),
+                JMFunctions.getDocDir()+"/tes_result2.xlsx", 
+                TblPegawai.create().getTableList()
+                    .setRptXlsExcluded(0,4,6)
+                    .setRptXlsSheetNameFromColIndex(1)
+                , 
+                true);
+        
+        */
+        JMFunctions.traceAndShow("YES");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        // TODO add your handling code here:
+        JMTable tmp=JMTable.create(QueryHelperPersediaan.qTmp, JMTable.DBTYPE_MYSQL);
+        if(!tmp.isEmpty()){
+            tmp.firstRow(false);
+            do{
+                JMFunctions.trace(tmp.getCurrentRow().getCells().get(0).getDBValue());
+            }while(tmp.nextRow(false)!=null);
+        }else JMFunctions.trace("NDA ADA ISI");
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
 
     /**
      * @param args the command line arguments
