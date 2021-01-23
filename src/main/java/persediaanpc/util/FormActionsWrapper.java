@@ -46,7 +46,7 @@ public class FormActionsWrapper implements JMFormActionsWrapperInterface {
             this.setPengadaanAutoField(me);
         }else if(me.getTableName().equals("p_tb_mutasi")){
             this.prosesBuku();
-            me.getDbObject().refresh();
+            me.getDbObject().refresh(true);
         }
     }
 

@@ -37,7 +37,8 @@ public class SplashScreen extends javax.swing.JFrame {
     }
     public void initSplash(){
         JMVec2 splashSize=new JMVec2(553,339);
-        Image img=new ImageIcon(JMFunctions.getResourcePath("img/splash.jpg", this.getClass())).getImage();
+        //Image img=new ImageIcon(JMFunctions.getResourcePath("img/splash.jpg", this.getClass())).getImage();
+        Image img=new ImageIcon(JMFunctions.getResourcePath("img/wp.jpg", this.getClass())).getImage();
         JMVec2 imgSize=new JMVec2(img.getWidth(rootPane),img.getHeight(rootPane));
         imgSize.trace();
         List<JMVec2> scaled=JMFunctions.scaledSize(imgSize, splashSize, JMFunctions.SCALE_FIT);

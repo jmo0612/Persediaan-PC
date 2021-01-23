@@ -96,7 +96,7 @@ public class DBNewRecordWrapper implements JMDBNewRecordInterface {
         row.setValueFromString(0, id+JMFormatCollection.leadingZero(nInt, 6));
         return row;
     }
-    private JMRow newMutasi(JMRow row){
+    private JMRow newMutasi(JMRow row, String idTbl){
         JMDate d=JMDate.now();
         String id="MUT___"+d.getYearFull()
                 +JMFormatCollection.leadingZero(d.getMonth(), 2)
@@ -114,7 +114,11 @@ public class DBNewRecordWrapper implements JMDBNewRecordInterface {
         //JMFunctions.traceAndShow(id+JMFormatCollection.leadingZero(nInt, 6));
         row.setValueFromString(0,id+JMFormatCollection.leadingZero(nInt, 6));
         row.setValueFromString(3, Global.liveTimer.getDate().dateTimeDB()); 
-        row.setValueFromString(5, "MUTASI_001"); 
+        if(idTbl.equals("PENGADAAN")){
+            row.setValueFromString(5, "MUTASI_001");
+        }else if(idTbl.equals("PERMINTAAN")){
+            row.setValueFromString(5, "MUTASI_003");
+        } 
         row.setValueFromString(8, "Kantor Dinas PUPR Minut"); 
         row.setValueFromString(10, "Dinas Pekerjaan Umum dan Penataan Ruang"); 
         tmp=JMTable.create("select * from p_tb_pj_barang where id_jab_barang='PgunaB'", JMTable.DBTYPE_MYSQL);
@@ -159,7 +163,7 @@ public class DBNewRecordWrapper implements JMDBNewRecordInterface {
     }
 
     @Override
-    public JMRow newDefaultRow(String tableName,JMRow newRow, List<String> params) {
+    public JMRow newDefaultRow(String tableName,JMRow newRow, List<String> params, String id) {
         if(tableName.equals("p_tb_bidang")){
             return this.newBidang(newRow);
         }else if(tableName.equals("p_tb_item")){
@@ -169,7 +173,7 @@ public class DBNewRecordWrapper implements JMDBNewRecordInterface {
         }else if(tableName.equals("p_tb_pegawai")){
             return this.newPeg(newRow);
         }else if(tableName.equals("p_tb_mutasi")){
-            return this.newMutasi(newRow);
+            return this.newMutasi(newRow,id);
         }else if(tableName.equals("p_tb_mutasi_det_real") && params.size()>0){
             return this.newMutasiDetReal(newRow,params.get(0));
         }else{

@@ -15,7 +15,7 @@ import persediaanpc.util.LiveTimer;
 public class Global {
     private static String user;
     private static boolean editor=true;
-    private static boolean admin;
+    private static boolean admin=true;
     private static boolean itUser=true;
     private static int activeYear=2020;
     

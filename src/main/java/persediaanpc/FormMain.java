@@ -23,21 +23,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import persediaanpc.tables.tes.TableBidang;
-import persediaanpc.tables.tes.TableItem;
-import persediaanpc.tables.tes.TablePBJ;
-import persediaanpc.tables.tes.TablePegawai;
-import persediaanpc.tables.tes.TablePengadaan;
-import persediaanpc.tables.tes.TablePjBrg;
-import persediaanpc.tables.TableTes;
 import persediaanpc.tables.TblBidang;
 import persediaanpc.tables.TblItem;
 import persediaanpc.tables.TblPegawai;
 import persediaanpc.tables.TblPengadaan;
+import persediaanpc.tables.TblPermintaan;
 import persediaanpc.tables.TblPjPBJ;
 import persediaanpc.util.LiveTimer;
 import persediaanpc.util.MutasiBuku;
 import persediaanpc.util.QueryHelperPersediaan;
+import persediaanpc.util.ReportSementara;
 
 /**
  *
@@ -248,6 +243,11 @@ public class FormMain extends JMPCForm{
         jMenu7.setText("Barang Keluar");
 
         jMenuItem6.setText("Penyaluran");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
         jMenu7.add(jMenuItem6);
 
         jMenu3.add(jMenu7);
@@ -368,9 +368,7 @@ public class FormMain extends JMPCForm{
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         // TODO add your handling code here:
-        FormTable frmPjBrg=new FormTable(null,true);
-        TablePjBrg tbPBJ=TablePjBrg.create("select * from p_tb_pj_barang", frmPjBrg);
-        frmPjBrg.setVisible(true);
+        
     }//GEN-LAST:event_jMenuItem10ActionPerformed
 
     private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
@@ -381,10 +379,19 @@ public class FormMain extends JMPCForm{
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
+        ReportSementara.mutasi("2020-01-01 00:00:00", "2020-12-31 23:59:59");
+        
+        
+        
+        
+        
+        
+        
         //TblBidang.create().show();
         //TblPegawai.create().show();
         //TableTes.create().show();
         
+        /*
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
                 JMFunctions.getResourcePath("raw/tes3.xlsx").getPath(),
@@ -394,6 +401,7 @@ public class FormMain extends JMPCForm{
                     .setRptXlsSheetNameFromColIndex(4)
                 , 
                 true);
+        */
         
         
         /*
@@ -440,6 +448,12 @@ public class FormMain extends JMPCForm{
         JMFunctions.trace("asli: "+tmp.dateTimeDB());
         JMFunctions.trace("modif: "+tmp.addSeconds(1).dateTimeDB());
     }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        // TODO add your handling code here:
+        
+        TblPermintaan.create().show();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
 
     /**
      * @param args the command line arguments

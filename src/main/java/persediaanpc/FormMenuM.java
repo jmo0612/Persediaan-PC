@@ -6,7 +6,6 @@
 package persediaanpc;
 
 import com.thowo.jmpcframework.component.JMPCFormModal;
-import persediaanpc.tables.tes.TablePengadaan;
 import persediaanpc.util.QueryHelperPersediaan;
 
 /**
@@ -94,7 +93,7 @@ public class FormMenuM extends JMPCFormModal {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         FormTable frmPengadaan=new FormTable(null,true);
-        TablePengadaan tbPengadaan=TablePengadaan.create(QueryHelperPersediaan.qListPengadaan, frmPengadaan);
+        //TablePengadaan tbPengadaan=TablePengadaan.create(QueryHelperPersediaan.qListPengadaan, frmPengadaan);
         frmPengadaan.setVisible(true);
     }//GEN-LAST:event_jButton1ActionPerformed
 

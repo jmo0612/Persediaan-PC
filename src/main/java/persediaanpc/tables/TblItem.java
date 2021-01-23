@@ -60,6 +60,7 @@ public class TblItem {
         this.isLookup=isLookup;
         this.isEditable=Global.getEditor();
         this.query=query;
+        //JMFunctions.trace(QueryHelperPersediaan.qListItemForBidangFromDate(Global.liveTimer.getDate().dateDB(), ""));
         if(this.query==null)this.query=QueryHelperPersediaan.qListItemForBidangFromDate(Global.liveTimer.getDate().dateDB(), "");
         this.fieldProp=new ResourceField();
         //this.list=JMPCTable.create();

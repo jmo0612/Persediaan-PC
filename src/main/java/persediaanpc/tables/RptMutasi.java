@@ -23,6 +23,7 @@ import java.util.List;
 import persediaanpc.Global;
 import persediaanpc.R;
 import persediaanpc.util.DBNewRecordWrapper;
+import persediaanpc.util.FormActionsWrapper;
 import persediaanpc.util.QueryHelperPersediaan;
 import persediaanpc.util.ResourceField;
 
@@ -30,7 +31,7 @@ import persediaanpc.util.ResourceField;
  *
  * @author jimi
  */
-public class TblPjPBJ {
+public class RptMutasi {
     private String title;
     private String query;
     private ResourceField fieldProp;
@@ -41,32 +42,20 @@ public class TblPjPBJ {
     private boolean isEditable;
     private boolean isMasterDetail;
     
-    public static TblPjPBJ create(String query,boolean isLookup){
-        return new TblPjPBJ(query,isLookup);
+    public static RptMutasi create(String date0,String date1){
+        return new RptMutasi(date0,date1);
     }
     
-    public static TblPjPBJ create(String query){
-        return new TblPjPBJ(query,false);
-    }
-    public static TblPjPBJ create(boolean isLookup){
-        return new TblPjPBJ(null,isLookup);
-    }
-    public static TblPjPBJ create(){
-        return new TblPjPBJ(null,false);
-    }
-    public TblPjPBJ(String query,boolean isLookup){
-        this.title=R.label("TITLE_PBJ");
-        this.tableName="p_tb_pj_pbj";
-        this.isLookup=isLookup;
+    public RptMutasi(String date0,String date1){
+        //this.title=R.label("TITLE_PENGADAAN");
+        this.title="RPT";
+        this.tableName="";
+        this.isLookup=false;
         this.isEditable=Global.getEditor();
-        this.query=query;
-        if(this.query==null)this.query=QueryHelperPersediaan.qPBJ;
+        this.query=QueryHelperPersediaan.qRptMutasiMaster(date0, date1);
+        //JMFunctions.trace(this.query);
         this.fieldProp=new ResourceField();
-        //this.list=JMPCTable.create();
-        //Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
-        TblJabPBJRef tblJabPBJRef=TblJabPBJRef.create(true);
-        TblBidang tblBidang=TblBidang.create(true);
-        //TblPegawai tblPegawai=TblPegawai.create();
+        
         
         this.tblList=JMFormTableList.create(
                 this.title, 
@@ -76,13 +65,30 @@ public class TblPjPBJ {
                 new JMPCDBComponentWrapper(), 
                 new DBNewRecordWrapper(),
                 this.isLookup, 
-                this.isEditable)
-                .hideColumns(0,3,6)
-                .excludeColumnsFromUpdate(4,5,7)
-                .setFieldAsLookup(4, tblJabPBJRef.getTableList(), List.of(3,4,5), List.of(0,1,2))
-                .setFieldAsLookup(7, tblBidang.getTableList(), List.of(6,7), List.of(0,1))
-                .makeFieldsHidden(0,3,6);
+                false
+                );
+        this.tblList.setFormActionsWrapper(new FormActionsWrapper());
+        //this.tblList.setDelDependencyMasterColIndices(0);
+        //this.tblList.setDelDependencyDetailColIndices(1);
+        this.tblList.setId("RPT_MUTASI_MASTER");
         this.tblList.pack();
+        
+        JMFormTableList det=JMFormTableList.create(
+                    this.title, 
+                    QueryHelperPersediaan.qRptMutasi(date0, date1), 
+                    this.fieldProp, 
+                    "", 
+                    new JMPCDBComponentWrapper(), 
+                    new DBNewRecordWrapper(),
+                    false, 
+                    false);
+        det.setFormActionsWrapper(new FormActionsWrapper());
+        det.setQueryTemplate(QueryHelperPersediaan.qRptMutasi(date0, date1));
+        //det.setNewIdDependencyMasterColIndices(0);
+        this.tblList.setDetailTable(det);
+        det.setMasterTable(this.tblList);
+        det.setId("RPT_MUTASI");
+        det.pack();
     }
     public void show(){
         this.tblList.show();

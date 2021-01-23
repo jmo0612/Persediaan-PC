@@ -33,7 +33,11 @@ public class R {
         if(l==null){
             l=new Locale(langDef,regDef);
         }
-        return ResourceBundle.getBundle("localization/Labels",l).getString(var);
+        try{
+            return ResourceBundle.getBundle("localization/Labels",l).getString(var);
+        }catch(java.util.MissingResourceException ex){
+            return "{NONE}";
+        }
     }
     public static String error(String var){
         Locale l=new Locale(lang,reg);

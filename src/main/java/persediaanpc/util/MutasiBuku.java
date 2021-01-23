@@ -124,17 +124,7 @@ public class MutasiBuku {
                             str+=","+strTmp;
                         }
 
-                        strTmp="('DMB___"+curIdMut+"SITEM_"+curIdDet+"'";
-                        strTmp+=",'"+curIdMut+"'";
-                        strTmp+=",'SITEM_"+curIdDet+"'";
-                        strTmp+=",'"+curQty+"'";
-                        strTmp+=",'0'";
-                        strTmp+=",'"+curQty+"')";
-                        if(str2.equals("")){
-                            str2=strTmp;
-                        }else{
-                            str2+=","+strTmp;
-                        }
+                        
                         JMTable tmpLast=JMTable.create(QueryHelperPersediaan.qSubLastBuku(curIdItem, curTglMut,curIdMut), JMTable.DBTYPE_MYSQL);
                         if(!tmpLast.isEmpty()){
                             tmpLast.firstRow(false);
@@ -151,6 +141,17 @@ public class MutasiBuku {
                                     str2+=","+strTmp;
                                 }
                             }while(tmpLast.nextRow(false)!=null);
+                        }
+                        strTmp="('DMB___"+curIdMut+"SITEM_"+curIdDet+"'";
+                        strTmp+=",'"+curIdMut+"'";
+                        strTmp+=",'SITEM_"+curIdDet+"'";
+                        strTmp+=",'"+curQty+"'";
+                        strTmp+=",'0'";
+                        strTmp+=",'"+curQty+"')";
+                        if(str2.equals("")){
+                            str2=strTmp;
+                        }else{
+                            str2+=","+strTmp;
                         }
                         JMFunctions.trace("\n\n\n\n\n\nDEBIT=====================================================\n"+str+"\n\n"+str2);
                         str="REPLACE INTO p_tb_subitem(id_subitem, wkt_masuk_item, id_item, harga_satuan) values"+str;
