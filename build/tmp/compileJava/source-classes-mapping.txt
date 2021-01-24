@@ -1,7 +1,19 @@
 persediaanpc/util/ResourceField.java
  persediaanpc.util.ResourceField
-persediaanpc/tables/TblPegawai.java
- persediaanpc.tables.TblPegawai
+persediaanpc/FormMain.java
+ persediaanpc.FormMain
+ persediaanpc.FormMain$1
+ persediaanpc.FormMain$10
+ persediaanpc.FormMain$11
+ persediaanpc.FormMain$12
+ persediaanpc.FormMain$2
+ persediaanpc.FormMain$3
+ persediaanpc.FormMain$4
+ persediaanpc.FormMain$5
+ persediaanpc.FormMain$6
+ persediaanpc.FormMain$7
+ persediaanpc.FormMain$8
+ persediaanpc.FormMain$9
 persediaanpc/tables/RptMutasi.java
  persediaanpc.tables.RptMutasi
 persediaanpc/Main.java
@@ -17,12 +29,8 @@ persediaanpc/util/ReportSementara.java
  persediaanpc.util.ReportSementara
 persediaanpc/tables/TblPengadaan.java
  persediaanpc.tables.TblPengadaan
-persediaanpc/SplashScreen.java
- persediaanpc.SplashScreen
- persediaanpc.SplashScreen$1
- persediaanpc.SplashScreen$2
- persediaanpc.SplashScreen$2$1
- persediaanpc.SplashScreen$3
+persediaanpc/tables/TblPermintaan.java
+ persediaanpc.tables.TblPermintaan
 persediaanpc/tables/TblTipeRef.java
  persediaanpc.tables.TblTipeRef
 persediaanpc/tables/TblKatRef.java
@@ -81,19 +89,11 @@ persediaanpc/FormDetail.java
  persediaanpc.FormDetail$1$1
 persediaanpc/util/MutasiBuku.java
  persediaanpc.util.MutasiBuku
-persediaanpc/FormMain.java
- persediaanpc.FormMain
- persediaanpc.FormMain$1
- persediaanpc.FormMain$10
- persediaanpc.FormMain$11
- persediaanpc.FormMain$12
- persediaanpc.FormMain$2
- persediaanpc.FormMain$3
- persediaanpc.FormMain$4
- persediaanpc.FormMain$5
- persediaanpc.FormMain$6
- persediaanpc.FormMain$7
- persediaanpc.FormMain$8
- persediaanpc.FormMain$9
-persediaanpc/tables/TblPermintaan.java
- persediaanpc.tables.TblPermintaan
+persediaanpc/SplashScreen.java
+ persediaanpc.SplashScreen
+ persediaanpc.SplashScreen$1
+ persediaanpc.SplashScreen$2
+ persediaanpc.SplashScreen$2$1
+ persediaanpc.SplashScreen$3
+persediaanpc/tables/TblPegawai.java
+ persediaanpc.tables.TblPegawai
