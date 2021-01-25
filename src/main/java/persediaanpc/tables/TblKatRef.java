@@ -54,6 +54,7 @@ public class TblKatRef {
     public static TblKatRef create(){
         return new TblKatRef(null,false);
     }
+    
     public TblKatRef(String query,boolean isLookup){
         this.title=R.label("TITLE_KATEGORI");
         this.tableName="p_ref_kat";

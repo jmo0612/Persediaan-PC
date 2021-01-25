@@ -64,6 +64,8 @@ public class TblTipeRef {
         this.fieldProp=new ResourceField();
         //this.list=JMPCTable.create();
         //Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
+        
+        
         this.tblList=JMFormTableList.create(
                 this.title, 
                 this.query, 

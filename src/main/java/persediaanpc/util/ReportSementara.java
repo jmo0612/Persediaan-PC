@@ -22,7 +22,7 @@ public class ReportSementara {
     public static void mutasi(int tahun){
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
-                JMFunctions.getResourcePath("raw/mutasi.xlsx").getPath(),
+                "raw/mutasi.xlsx",
                 JMFunctions.getDocDir()+"/mutasi_jadi.xlsx", 
                 RptMutasi.create(tahun).getTableList()
                     .setRptXlsSheetNameFromColIndex(16)
@@ -33,7 +33,7 @@ public class ReportSementara {
     public static void kartu(int tahun){
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
-                JMFunctions.getResourcePath("raw/kartu_persediaan.xlsx").getPath(),
+                "raw/kartu_persediaan.xlsx",
                 JMFunctions.getDocDir()+"/kartu_persediaan_jadi.xlsx", 
                 RptKartu.create(tahun).getTableList()
                     .setRptXlsSheetNameFromColIndex(3)
@@ -44,7 +44,7 @@ public class ReportSementara {
     public static void opname(int tahun){
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
-                JMFunctions.getResourcePath("raw/stock_opname.xlsx").getPath(),
+                "raw/stock_opname.xlsx",
                 JMFunctions.getDocDir()+"/stock_opname_jadi.xlsx", 
                 RptOpname.create(tahun).getTableList()
                     .setRptXlsSheetNameFromColIndex(16)
@@ -55,7 +55,7 @@ public class ReportSementara {
     public static void bastp(int tahun){
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
-                JMFunctions.getResourcePath("raw/bastp.xlsx").getPath(),
+                "raw/bastp.xlsx",
                 JMFunctions.getDocDir()+"/bastp_jadi.xlsx", 
                 RptPengadaan.create(tahun).getTableList()
                     .setRptXlsExcluded(0)
@@ -67,7 +67,7 @@ public class ReportSementara {
     public static void bastd(int tahun){
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
-                JMFunctions.getResourcePath("raw/bastd.xlsx").getPath(),
+                "raw/bastd.xlsx",
                 JMFunctions.getDocDir()+"/bastd_jadi.xlsx", 
                 RptDistribusi.create(tahun).getTableList()
                     .setRptXlsExcluded(0)
@@ -79,7 +79,7 @@ public class ReportSementara {
     public static void sppb(int tahun){
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
-                JMFunctions.getResourcePath("raw/sppb.xlsx").getPath(),
+                "raw/sppb.xlsx",
                 JMFunctions.getDocDir()+"/sppb_jadi.xlsx", 
                 RptDistribusi.create(tahun).getTableList()
                     .setRptXlsExcluded(0)
@@ -91,7 +91,7 @@ public class ReportSementara {
     public static void spb(int tahun){
         JMFunctions.writeTableToExistingExcel(
                 JMExcel.RPT_MODE_MASTER_DETAIL, 
-                JMFunctions.getResourcePath("raw/spb.xlsx").getPath(),
+                "raw/spb.xlsx",
                 JMFunctions.getDocDir()+"/spb_jadi.xlsx", 
                 RptDistribusi.create(tahun).getTableList()
                     .setRptXlsExcluded(0)

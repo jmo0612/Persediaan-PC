@@ -9,6 +9,11 @@ repositories {
     jcenter()
 }
 
+compileJava {
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
 dependencies {
     testImplementation     'junit:junit:4.13'
     implementation project(path: ':JMPCFramework')

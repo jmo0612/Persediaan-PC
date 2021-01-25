@@ -1,5 +1,3 @@
-persediaanpc/util/ResourceField.java
- persediaanpc.util.ResourceField
 persediaanpc/FormMain.java
  persediaanpc.FormMain
  persediaanpc.FormMain$1
@@ -51,8 +49,8 @@ persediaanpc/util/LiveTimer.java
  persediaanpc.util.LiveTimer$2
 persediaanpc/util/DBNewRecordWrapper.java
  persediaanpc.util.DBNewRecordWrapper
-persediaanpc/GitIgnoreDBConnection.java
- persediaanpc.GitIgnoreDBConnection
+persediaanpc/tables/TblPegawai.java
+ persediaanpc.tables.TblPegawai
 persediaanpc/FormMenuM.java
  persediaanpc.FormMenuM
  persediaanpc.FormMenuM$1
@@ -95,6 +93,8 @@ persediaanpc/FormDetail.java
  persediaanpc.FormDetail$1$1
 persediaanpc/util/MutasiBuku.java
  persediaanpc.util.MutasiBuku
+persediaanpc/util/ResourceField.java
+ persediaanpc.util.ResourceField
 persediaanpc/tables/RptKartu.java
  persediaanpc.tables.RptKartu
 persediaanpc/SplashScreen.java
@@ -103,5 +103,5 @@ persediaanpc/SplashScreen.java
  persediaanpc.SplashScreen$2
  persediaanpc.SplashScreen$2$1
  persediaanpc.SplashScreen$3
-persediaanpc/tables/TblPegawai.java
- persediaanpc.tables.TblPegawai
+persediaanpc/GitIgnoreDBConnection.java
+ persediaanpc.GitIgnoreDBConnection

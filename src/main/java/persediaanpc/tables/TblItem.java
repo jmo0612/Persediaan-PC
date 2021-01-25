@@ -67,6 +67,7 @@ public class TblItem {
         //Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
         TblKatRef tblKatRef=TblKatRef.create(true);
         
+        
         this.tblList=JMFormTableList.create(
                 this.title, 
                 this.query, 
