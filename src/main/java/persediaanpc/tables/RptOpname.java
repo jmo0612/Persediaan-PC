@@ -31,7 +31,7 @@ import persediaanpc.util.ResourceField;
  *
  * @author jimi
  */
-public class RptMutasi {
+public class RptOpname {
     private String title;
     private String query;
     private ResourceField fieldProp;
@@ -42,11 +42,11 @@ public class RptMutasi {
     private boolean isEditable;
     private boolean isMasterDetail;
     
-    public static RptMutasi create(int tahun){
-        return new RptMutasi(tahun);
+    public static RptOpname create(int tahun){
+        return new RptOpname(tahun);
     }
     
-    public RptMutasi(int tahun){
+    public RptOpname(int tahun){
         //this.title=R.label("TITLE_PENGADAAN");
         this.title="RPT";
         this.tableName="";

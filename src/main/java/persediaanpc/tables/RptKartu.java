@@ -31,7 +31,7 @@ import persediaanpc.util.ResourceField;
  *
  * @author jimi
  */
-public class RptMutasi {
+public class RptKartu {
     private String title;
     private String query;
     private ResourceField fieldProp;
@@ -42,17 +42,17 @@ public class RptMutasi {
     private boolean isEditable;
     private boolean isMasterDetail;
     
-    public static RptMutasi create(int tahun){
-        return new RptMutasi(tahun);
+    public static RptKartu create(int tahun){
+        return new RptKartu(tahun);
     }
     
-    public RptMutasi(int tahun){
+    public RptKartu(int tahun){
         //this.title=R.label("TITLE_PENGADAAN");
         this.title="RPT";
         this.tableName="";
         this.isLookup=false;
         this.isEditable=Global.getEditor();
-        this.query=QueryHelperPersediaan.qRptMutasiMaster(tahun);
+        this.query=QueryHelperPersediaan.qRptMutasi(tahun+"-01-01 00:00:00", tahun+"-12-31 23:59:59");
         //JMFunctions.trace(this.query);
         this.fieldProp=new ResourceField();
         
@@ -70,12 +70,12 @@ public class RptMutasi {
         this.tblList.setFormActionsWrapper(new FormActionsWrapper());
         //this.tblList.setDelDependencyMasterColIndices(0);
         //this.tblList.setDelDependencyDetailColIndices(1);
-        this.tblList.setId("RPT_MUTASI_MASTER");
+        this.tblList.setId("RPT_KARTU_MASTER");
         this.tblList.pack();
         
         JMFormTableList det=JMFormTableList.create(
                     this.title, 
-                    QueryHelperPersediaan.qRptMutasi("[5]", "[6]"), 
+                    QueryHelperPersediaan.qRptKartu(tahun+"-01-01 00:00:00",tahun+"-12-31 23:59:59", "[0]"), 
                     this.fieldProp, 
                     "", 
                     new JMPCDBComponentWrapper(), 
@@ -83,11 +83,11 @@ public class RptMutasi {
                     false, 
                     false);
         det.setFormActionsWrapper(new FormActionsWrapper());
-        det.setQueryTemplate(QueryHelperPersediaan.qRptMutasi("[5]", "[6]"));
+        det.setQueryTemplate(QueryHelperPersediaan.qRptKartu(tahun+"-01-01 00:00:00",tahun+"-12-31 23:59:59", "[0]"));
         //det.setNewIdDependencyMasterColIndices(0);
         this.tblList.setDetailTable(det);
         det.setMasterTable(this.tblList);
-        det.setId("RPT_MUTASI");
+        det.setId("RPT_KARTU");
         det.pack();
     }
     public void show(){

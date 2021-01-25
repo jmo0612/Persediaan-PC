@@ -31,7 +31,7 @@ import persediaanpc.util.ResourceField;
  *
  * @author jimi
  */
-public class RptMutasi {
+public class RptDistribusi {
     private String title;
     private String query;
     private ResourceField fieldProp;
@@ -42,19 +42,24 @@ public class RptMutasi {
     private boolean isEditable;
     private boolean isMasterDetail;
     
-    public static RptMutasi create(int tahun){
-        return new RptMutasi(tahun);
+    public static RptDistribusi create(int tahun){
+        return new RptDistribusi(tahun);
     }
     
-    public RptMutasi(int tahun){
-        //this.title=R.label("TITLE_PENGADAAN");
-        this.title="RPT";
-        this.tableName="";
+    public RptDistribusi(int tahun){
+        this.title=R.label("TITLE_PERMINTAAN");
+        this.tableName="p_tb_mutasi";
         this.isLookup=false;
-        this.isEditable=Global.getEditor();
-        this.query=QueryHelperPersediaan.qRptMutasiMaster(tahun);
+        this.isEditable=false;
+        this.query=QueryHelperPersediaan.qListPermintaanFilter(tahun);
         //JMFunctions.trace(this.query);
         this.fieldProp=new ResourceField();
+        //Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
+        
+        //TblPegawai tblPegawai=TblPegawai.create(QueryHelperPersediaan.qPegawaiAktif, true);
+        //TblItem tblItem=TblItem.create(QueryHelperPersediaan.qListItemForBidangFromDate("[3]", "[24]"),true);
+        //tblItem.getTableList().setQueryTemplate(QueryHelperPersediaan.qListItemForBidangFromDate("[3]", "[24]"));
+        
         
         
         this.tblList=JMFormTableList.create(
@@ -65,29 +70,30 @@ public class RptMutasi {
                 new JMPCDBComponentWrapper(), 
                 new DBNewRecordWrapper(),
                 this.isLookup, 
-                false
+                this.isEditable
                 );
         this.tblList.setFormActionsWrapper(new FormActionsWrapper());
         //this.tblList.setDelDependencyMasterColIndices(0);
         //this.tblList.setDelDependencyDetailColIndices(1);
-        this.tblList.setId("RPT_MUTASI_MASTER");
+        this.tblList.setId("PERMINTAAN");
+        //this.tblList.addLookupTable(tblItem.getTableList());
         this.tblList.pack();
         
         JMFormTableList det=JMFormTableList.create(
                     this.title, 
-                    QueryHelperPersediaan.qRptMutasi("[5]", "[6]"), 
+                    QueryHelperPersediaan.qDetailPermintaan("[0]"), 
                     this.fieldProp, 
                     "", 
                     new JMPCDBComponentWrapper(), 
                     new DBNewRecordWrapper(),
                     false, 
-                    false);
+                    true);
         det.setFormActionsWrapper(new FormActionsWrapper());
-        det.setQueryTemplate(QueryHelperPersediaan.qRptMutasi("[5]", "[6]"));
+        det.setQueryTemplate(QueryHelperPersediaan.qDetailPermintaan("[0]"));
         //det.setNewIdDependencyMasterColIndices(0);
         this.tblList.setDetailTable(det);
         det.setMasterTable(this.tblList);
-        det.setId("RPT_MUTASI");
+        det.setId("DETAIL_PERMINTAAN");
         det.pack();
     }
     public void show(){

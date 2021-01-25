@@ -33,10 +33,14 @@ persediaanpc/tables/TblPermintaan.java
  persediaanpc.tables.TblPermintaan
 persediaanpc/tables/TblTipeRef.java
  persediaanpc.tables.TblTipeRef
+persediaanpc/tables/RptDistribusi.java
+ persediaanpc.tables.RptDistribusi
 persediaanpc/tables/TblKatRef.java
  persediaanpc.tables.TblKatRef
 persediaanpc/tables/TblItem.java
  persediaanpc.tables.TblItem
+persediaanpc/tables/RptPengadaan.java
+ persediaanpc.tables.RptPengadaan
 persediaanpc/tables/TblPjPBJ.java
  persediaanpc.tables.TblPjPBJ
 persediaanpc/tables/TblBidang.java
@@ -64,6 +68,8 @@ persediaanpc/util/FormTimerSetting.java
  persediaanpc.util.FormTimerSetting$4
  persediaanpc.util.FormTimerSetting$5
  persediaanpc.util.FormTimerSetting$5$1
+persediaanpc/tables/RptOpname.java
+ persediaanpc.tables.RptOpname
 persediaanpc/R.java
  persediaanpc.R
 persediaanpc/Global.java
@@ -89,6 +95,8 @@ persediaanpc/FormDetail.java
  persediaanpc.FormDetail$1$1
 persediaanpc/util/MutasiBuku.java
  persediaanpc.util.MutasiBuku
+persediaanpc/tables/RptKartu.java
+ persediaanpc.tables.RptKartu
 persediaanpc/SplashScreen.java
  persediaanpc.SplashScreen
  persediaanpc.SplashScreen$1
