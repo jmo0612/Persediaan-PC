@@ -379,14 +379,14 @@ public class FormMain extends JMPCForm{
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
-        ReportSementara.mutasi(2020);
+        //ReportSementara.mutasi(2020);
         ReportSementara.kartu(2020);
-        ReportSementara.opname(2020);
+        /*ReportSementara.opname(2020);
         ReportSementara.bastp(2020);
         ReportSementara.bastd(2020);
         ReportSementara.sppb(2020);
         ReportSementara.spb(2020);
-        
+        */
         
         
         

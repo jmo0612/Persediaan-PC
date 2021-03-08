@@ -1,3 +1,5 @@
+persediaanpc/util/ResourceField.java
+ persediaanpc.util.ResourceField
 persediaanpc/FormMain.java
  persediaanpc.FormMain
  persediaanpc.FormMain$1
@@ -93,8 +95,6 @@ persediaanpc/FormDetail.java
  persediaanpc.FormDetail$1$1
 persediaanpc/util/MutasiBuku.java
  persediaanpc.util.MutasiBuku
-persediaanpc/util/ResourceField.java
- persediaanpc.util.ResourceField
 persediaanpc/tables/RptKartu.java
  persediaanpc.tables.RptKartu
 persediaanpc/SplashScreen.java
