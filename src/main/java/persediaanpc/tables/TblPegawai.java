@@ -64,7 +64,10 @@ public class TblPegawai {
         if(this.query==null)this.query=QueryHelperPersediaan.qPegawai;
         this.fieldProp=new ResourceField();
         //this.list=JMPCTable.create();
-        Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
+        //JMFunctions.trace(JMFunctions.resourceToCache("img/true.png", this.getClass()).getPath());
+        //JMFunctions.trace(JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath());
+        //Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
+        Object[] boolImage={JMFunctions.resourceToCache("img/true.png", this.getClass()).getPath(),JMFunctions.resourceToCache("img/false.png", this.getClass()).getPath()};
         this.tblList=JMFormTableList.create(
                 this.title, 
                 this.query, 
@@ -76,11 +79,11 @@ public class TblPegawai {
                 this.isEditable)
                 .hideColumns(0,4)
                 .setBoolImage(boolImage, 6)
-                .setFieldAsLookup(5, TableTes.create(true).getTableList(),JMFunctions.getListIntegerFrom(4,5),JMFunctions.getListIntegerFrom(0,1))
                 .setFieldAsSwitch(6, R.label("AKTIF_TRUE"), R.label("AKTIF_FALSE"))
                 .excludeColumnsFromUpdate(5)
                 .makeFieldsHidden(0,4)
-                .makeFieldsDisabled(0,4);
+                .makeFieldsDisabled(0,4)
+                .setAllowPrint(false);
         this.tblList.pack();
     }
     public void show(){

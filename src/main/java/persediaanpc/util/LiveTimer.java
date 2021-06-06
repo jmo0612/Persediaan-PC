@@ -80,7 +80,7 @@ public class LiveTimer {
         label.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if(e.getClickCount()==2){
+                if(e.getClickCount()==2 && e.isControlDown()){
                     if(!LiveTimer.this.form.isVisible() && Global.getItUser())LiveTimer.this.form.setVisible(true);
                 }
             }

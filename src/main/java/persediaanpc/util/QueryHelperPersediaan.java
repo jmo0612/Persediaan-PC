@@ -2,6 +2,7 @@ package persediaanpc.util;
 
 import com.thowo.jmjavaframework.JMDate;
 import com.thowo.jmjavaframework.JMFormatCollection;
+import com.thowo.jmjavaframework.JMFunctions;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -1020,6 +1021,7 @@ public class QueryHelperPersediaan {
     public static String qBidang="select * from p_tb_bidang";
     
     public static String qPBJ="SELECT p_tb_pj_pbj.id_pj_pbj, p_tb_pj_pbj.nm_pj_pbj, p_tb_pj_pbj.nip_pj_pbj, p_tb_pj_pbj.id_jab_pbj, p_ref_jab_pbj.singkat_jab_pbj, p_ref_jab_pbj.nm_jab_pbj, p_tb_pj_pbj.id_bidang, p_tb_bidang.nm_bidang, p_tb_pj_pbj.no_sk_jab_pbj, p_tb_pj_pbj.tgl_sk_jab_pbj FROM bmd.p_tb_bidang AS p_tb_bidang, bmd.p_tb_pj_pbj AS p_tb_pj_pbj, bmd.p_ref_jab_pbj AS p_ref_jab_pbj WHERE p_tb_bidang.id_bidang = p_tb_pj_pbj.id_bidang AND p_ref_jab_pbj.id_jab_pbj = p_tb_pj_pbj.id_jab_pbj";
+    public static String qBMD="SELECT * FROM p_tb_pj_barang";
     
     public static String qTotal(String idMutasi){
         String tmp="SELECT\n" +
@@ -2787,7 +2789,7 @@ public class QueryHelperPersediaan {
 
 
 
-
+        
         return ret;
     }
     
@@ -3176,7 +3178,7 @@ public class QueryHelperPersediaan {
 "		id_item ,\n" +
 "		nm_item ,\n" +
 "		sum(qty) as qty ,\n" +
-"		group_concat(sat_qty separator ' +\\n')as sat_qty ,\n" +
+"		group_concat(sat_qty order by wkt_masuk_item asc separator ' +\\n')as sat_qty ,\n" +
 "		sum(total_qty) as total_qty\n" +
 "		from\n" +
 "		(select \n" +
@@ -3187,6 +3189,7 @@ public class QueryHelperPersediaan {
 "		harga_satuan ,\n" +
 "		stok_akhir as qty ,\n" +
 "		IF(stok_akhir>0,CONCAT(FORMAT(stok_akhir ,2,'#,##0.00'),' @Rp.',FORMAT(harga_satuan,2,'#,##0.00')),NULL) as sat_qty ,\n" +
+"		wkt_masuk_item ,\n" +
 "		(stok_akhir*harga_satuan) as total_qty\n" +
 "		from \n" +
 "			(\n" +
@@ -3333,16 +3336,16 @@ public class QueryHelperPersediaan {
 "		tgl_mutasi ,\n" +
 "		uraian,\n" +
 "		sum(stok_awal) as stok_awal ,\n" +
-"		if(group_concat(sat_awal separator ' +\\n') is null,'-',group_concat(sat_awal separator ' +\\n')) as sat_awal,\n" +
+"		if(group_concat(sat_awal order by wkt_masuk_item asc separator ' +\\n') is null,'-',group_concat(sat_awal order by wkt_masuk_item asc separator ' +\\n')) as sat_awal,\n" +
 "		sum(total_awal) as total_awal,\n" +
 "		sum(qty_masuk) as qty_masuk,\n" +
-"		if(group_concat(sat_masuk separator ' +\\n') is null,'-',group_concat(sat_masuk separator ' +\\n')) as sat_masuk,\n" +
+"		if(group_concat(sat_masuk order by wkt_masuk_item asc separator ' +\\n') is null,'-',group_concat(sat_masuk order by wkt_masuk_item asc separator ' +\\n')) as sat_masuk,\n" +
 "		sum(total_masuk) as total_masuk,\n" +
 "		sum(qty_keluar) as qty_keluar,\n" +
-"		if(group_concat(sat_keluar separator ' +\\n') is null,'-',group_concat(sat_keluar separator ' +\\n')) as sat_keluar,\n" +
+"		if(group_concat(sat_keluar order by wkt_masuk_item asc separator ' +\\n') is null,'-',group_concat(sat_keluar order by wkt_masuk_item asc separator ' +\\n')) as sat_keluar,\n" +
 "		sum(total_keluar) as total_keluar,\n" +
 "		sum(stok_akhir) as stok_akhir,\n" +
-"		if(group_concat(sat_akhir separator ' +\\n') is null,'-',group_concat(sat_akhir separator ' +\\n')) as sat_akhir,\n" +
+"		if(group_concat(sat_akhir order by wkt_masuk_item asc separator ' +\\n') is null,'-',group_concat(sat_akhir order by wkt_masuk_item asc separator ' +\\n')) as sat_akhir,\n" +
 "		sum(total_akhir) as total_akhir\n" +
 "		from\n" +
 "		(select \n" +
@@ -3353,6 +3356,7 @@ public class QueryHelperPersediaan {
 "		REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(struktur_ket,'[JAB]',jab_pihak2),'[BIDANG]',nm_bidang),'[BA]',no_ba_mutasi),'[NAMA]',nm_pihak2),'[INSTANSI]',instansi_pihak2) as uraian,\n" +
 "		debit ,\n" +
 "		harga_satuan ,\n" +
+"		wkt_masuk_item ,\n" +
 "		stok_awal ,\n" +
 "		IF(stok_awal>0,CONCAT(FORMAT(stok_awal ,2,'#,##0.00'),' @Rp.',FORMAT(harga_satuan,2,'#,##0.00')),NULL) as sat_awal ,\n" +
 "		(stok_awal*harga_satuan)as total_awal,\n" +
@@ -3520,7 +3524,7 @@ public class QueryHelperPersediaan {
 "	)qIsi";
         
         
-        
+        JMFunctions.trace("\n\n\n\n"+ret);
         return ret;
     }
     

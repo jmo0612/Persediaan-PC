@@ -28,7 +28,9 @@ import persediaanpc.tables.TblItem;
 import persediaanpc.tables.TblPegawai;
 import persediaanpc.tables.TblPengadaan;
 import persediaanpc.tables.TblPermintaan;
+import persediaanpc.tables.TblPjBMD;
 import persediaanpc.tables.TblPjPBJ;
+import persediaanpc.util.FormReportFilter;
 import persediaanpc.util.LiveTimer;
 import persediaanpc.util.MutasiBuku;
 import persediaanpc.util.QueryHelperPersediaan;
@@ -39,6 +41,8 @@ import persediaanpc.util.ReportSementara;
  * @author jimi
  */
 public class FormMain extends JMPCForm{
+    
+    private FormReportFilter frmRep;
 
     /**
      * Creates new form FormMain
@@ -51,7 +55,7 @@ public class FormMain extends JMPCForm{
         this.setExtendedState(MAXIMIZED_BOTH);
         
         //JMFunctions.trace(JMFormatCollection.capitalizeWord(JMFormatCollection.terbilang(21)));
-        
+        this.frmRep=new FormReportFilter(this, true);
     }
 
     /**
@@ -66,6 +70,7 @@ public class FormMain extends JMPCForm{
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         jPanel3 = new javax.swing.JPanel();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -88,16 +93,8 @@ public class FormMain extends JMPCForm{
         jMenuItem5 = new javax.swing.JMenuItem();
         jMenu7 = new javax.swing.JMenu();
         jMenuItem6 = new javax.swing.JMenuItem();
-        jMenu4 = new javax.swing.JMenu();
-        jMenuItem7 = new javax.swing.JMenuItem();
         jMenu5 = new javax.swing.JMenu();
-        jMenu9 = new javax.swing.JMenu();
-        jMenuItem12 = new javax.swing.JMenuItem();
-        jMenu10 = new javax.swing.JMenu();
-        jMenuItem13 = new javax.swing.JMenuItem();
-        jMenuItem14 = new javax.swing.JMenuItem();
-        jMenuItem15 = new javax.swing.JMenuItem();
-        jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,13 +107,18 @@ public class FormMain extends JMPCForm{
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 24)); // NOI18N
         jLabel1.setText("Date");
 
+        jLabel2.setFont(new java.awt.Font("Ubuntu", 0, 12)); // NOI18N
+        jLabel2.setText("Copyright© 2020 JM");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap(873, Short.MAX_VALUE)
-                .addComponent(jLabel1)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap(813, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -124,7 +126,9 @@ public class FormMain extends JMPCForm{
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel1)
-                .addContainerGap(416, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 395, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addContainerGap())
         );
 
         jPanel1.add(jPanel2);
@@ -147,6 +151,7 @@ public class FormMain extends JMPCForm{
         jMenu1.setText("File");
 
         jMenuItem1.setText("Login");
+        jMenuItem1.setEnabled(false);
         jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem1ActionPerformed(evt);
@@ -155,6 +160,7 @@ public class FormMain extends JMPCForm{
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setText("Logout");
+        jMenuItem2.setEnabled(false);
         jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem2ActionPerformed(evt);
@@ -254,42 +260,15 @@ public class FormMain extends JMPCForm{
 
         jMenuBar1.add(jMenu3);
 
-        jMenu4.setText("Proses");
+        jMenu5.setText("Laporan");
 
-        jMenuItem7.setText("Proses Laporan Persediaan");
+        jMenuItem7.setText("Laporan Persediaan");
         jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenuItem7ActionPerformed(evt);
             }
         });
-        jMenu4.add(jMenuItem7);
-
-        jMenuBar1.add(jMenu4);
-
-        jMenu5.setText("Laporan");
-
-        jMenu9.setText("Penerimaan Barang");
-
-        jMenuItem12.setText("BA Penerimaan");
-        jMenu9.add(jMenuItem12);
-
-        jMenu5.add(jMenu9);
-
-        jMenu10.setText("Pengeluaran Barang");
-
-        jMenuItem13.setText("Nota Permintaan");
-        jMenu10.add(jMenuItem13);
-
-        jMenuItem14.setText("Surat Perintah Penyaluran Barang");
-        jMenu10.add(jMenuItem14);
-
-        jMenuItem15.setText("BA Penyaluran Barang");
-        jMenu10.add(jMenuItem15);
-
-        jMenu5.add(jMenu10);
-
-        jMenuItem16.setText("Persediaan Barang");
-        jMenu5.add(jMenuItem16);
+        jMenu5.add(jMenuItem7);
 
         jMenuBar1.add(jMenu5);
 
@@ -368,25 +347,20 @@ public class FormMain extends JMPCForm{
 
     private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
         // TODO add your handling code here:
-        
+        TblPjBMD.create().show();
     }//GEN-LAST:event_jMenuItem10ActionPerformed
-
-    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
-        // TODO add your handling code here:
-        MutasiBuku.create();
-    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
         // TODO add your handling code here:
         //ReportSementara.mutasi(2020);
-        ReportSementara.kartu(2020);
-        /*ReportSementara.opname(2020);
-        ReportSementara.bastp(2020);
-        ReportSementara.bastd(2020);
-        ReportSementara.sppb(2020);
-        ReportSementara.spb(2020);
-        */
+        //ReportSementara.kartu(2020);
+        //ReportSementara.opname(2020);
+        //ReportSementara.bastp(2020);
+        //ReportSementara.bastd(2020);
+        //ReportSementara.sppb(2020);
+        //ReportSementara.spb(2020);
+        
         
         
         
@@ -434,7 +408,7 @@ public class FormMain extends JMPCForm{
                 true);
         
         */
-        JMFunctions.traceAndShow("YES");
+        //JMFunctions.traceAndShow("YES");
     }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
@@ -454,6 +428,11 @@ public class FormMain extends JMPCForm{
         
         TblPermintaan.create().show();
     }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        // TODO add your handling code here:
+        this.frmRep.setVisible(true);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -492,25 +471,18 @@ public class FormMain extends JMPCForm{
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
-    private javax.swing.JMenu jMenu10;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenu jMenu3;
-    private javax.swing.JMenu jMenu4;
     private javax.swing.JMenu jMenu5;
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenu jMenu7;
     private javax.swing.JMenu jMenu8;
-    private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JMenuItem jMenuItem10;
     private javax.swing.JMenuItem jMenuItem11;
-    private javax.swing.JMenuItem jMenuItem12;
-    private javax.swing.JMenuItem jMenuItem13;
-    private javax.swing.JMenuItem jMenuItem14;
-    private javax.swing.JMenuItem jMenuItem15;
-    private javax.swing.JMenuItem jMenuItem16;
     private javax.swing.JMenuItem jMenuItem17;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;

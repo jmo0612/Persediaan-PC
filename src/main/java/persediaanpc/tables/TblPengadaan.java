@@ -65,7 +65,7 @@ public class TblPengadaan {
         if(this.query==null)this.query=QueryHelperPersediaan.qListPengadaan;
         //JMFunctions.trace(this.query);
         this.fieldProp=new ResourceField();
-        Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
+        Object[] boolImage={JMFunctions.resourceToCache("img/true.png", this.getClass()).getPath(),JMFunctions.resourceToCache("img/false.png", this.getClass()).getPath()};
         
         TblPjPBJ tblPjPBJ=TblPjPBJ.create(true);
         TblItem tblItem=TblItem.create(QueryHelperPersediaan.qListItemForBidangFromDate("[3]", "[24]"),true);
@@ -88,8 +88,9 @@ public class TblPengadaan {
                 .setBoolImage(boolImage, 26)
                 .setBoolImage(boolImage, 27)
                 .excludeColumnsFromUpdate(1,2,25,28)
-                .setFieldAsLookup(6, tblPjPBJ.getTableList(), List.of(6,7,9,24,25), List.of(1,2,5,6,7))
-                .makeFieldsHidden(1,2,5,7,8,9,10,11,12,13,14,15,16,17,18,19,24,26,27);
+                .setFieldAsLookup(6, tblPjPBJ.getTableList(), JMFunctions.listIntegerOf(6,7,9,24,25), JMFunctions.listIntegerOf(1,2,5,6,7))
+                .makeFieldsHidden(1,2,5,7,8,9,10,11,12,13,14,15,16,17,18,19,24,26,27)
+                .setAllowPrint(false);
         this.tblList.setFormActionsWrapper(new FormActionsWrapper());
         this.tblList.setDelDependencyMasterColIndices(0);
         this.tblList.setDelDependencyDetailColIndices(1);
@@ -108,8 +109,9 @@ public class TblPengadaan {
                     true)
                 .hideColumns(0,1,2)
                 .excludeColumnsFromUpdate(3,5,7)
-                .setFieldAsLookup(3, tblItem.getTableList(), List.of(2,3,5), List.of(0,2,5))
-                .makeFieldsHidden(0,1,2);
+                .setFieldAsLookup(3, tblItem.getTableList(), JMFunctions.listIntegerOf(2,3,5), JMFunctions.listIntegerOf(0,2,5))
+                .makeFieldsHidden(0,1,2)
+                .setAllowPrint(false);
         det.setFormActionsWrapper(new FormActionsWrapper());
         det.setQueryTemplate(QueryHelperPersediaan.qDetailPengadaan("[0]"));
         det.setNewIdDependencyMasterColIndices(0);

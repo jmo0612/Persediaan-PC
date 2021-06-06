@@ -78,8 +78,9 @@ public class TblKatRef {
                 this.isEditable)
                 .hideColumns(0,2)
                 .excludeColumnsFromUpdate(3)
-                .setFieldAsLookup(3, tblTipeRef.getTableList(), List.of(2,3), List.of(0,1))
-                .makeFieldsHidden(0,2);
+                .setFieldAsLookup(3, tblTipeRef.getTableList(), JMFunctions.listIntegerOf(2,3), JMFunctions.listIntegerOf(0,1))
+                .makeFieldsHidden(0,2)
+                .setAllowPrint(false);
         this.tblList.pack();
     }
     public void show(){

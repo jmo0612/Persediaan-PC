@@ -74,7 +74,8 @@ public class TblBidang {
                 this.isLookup, 
                 this.isEditable)
                 .hideColumns(0)
-                .makeFieldsHidden(0);
+                .makeFieldsHidden(0)
+                .setAllowPrint(false);
         this.tblList.pack();
     }
     public void show(){

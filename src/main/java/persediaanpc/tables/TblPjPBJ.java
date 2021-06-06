@@ -66,7 +66,7 @@ public class TblPjPBJ {
         //Object[] boolImage={JMFunctions.getResourcePath("img/true.png", this.getClass()).getPath(),JMFunctions.getResourcePath("img/false.png", this.getClass()).getPath()};
         TblJabPBJRef tblJabPBJRef=TblJabPBJRef.create(true);
         TblBidang tblBidang=TblBidang.create(true);
-        //TblPegawai tblPegawai=TblPegawai.create();
+        TblPegawai tblPegawai=TblPegawai.create(true);
         
         this.tblList=JMFormTableList.create(
                 this.title, 
@@ -79,9 +79,12 @@ public class TblPjPBJ {
                 this.isEditable)
                 .hideColumns(0,3,6)
                 .excludeColumnsFromUpdate(4,5,7)
-                .setFieldAsLookup(4, tblJabPBJRef.getTableList(), List.of(3,4,5), List.of(0,1,2))
-                .setFieldAsLookup(7, tblBidang.getTableList(), List.of(6,7), List.of(0,1))
-                .makeFieldsHidden(0,3,6);
+                .setFieldAsLookup(1, tblPegawai.getTableList(), JMFunctions.listIntegerOf(1,2), JMFunctions.listIntegerOf(1,2))
+                .setFieldAsLookup(4, tblJabPBJRef.getTableList(), JMFunctions.listIntegerOf(3,4,5), JMFunctions.listIntegerOf(0,1,2))
+                .setFieldAsLookup(7, tblBidang.getTableList(), JMFunctions.listIntegerOf(6,7), JMFunctions.listIntegerOf(0,1))
+                .makeFieldsHidden(0,3,6)
+                .makeFieldsDisabled(2,5)
+                .setAllowPrint(false);
         this.tblList.pack();
     }
     public void show(){

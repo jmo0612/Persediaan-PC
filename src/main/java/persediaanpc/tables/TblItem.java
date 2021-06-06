@@ -79,8 +79,9 @@ public class TblItem {
                 this.isEditable)
                 .hideColumns(0,6)
                 .excludeColumnsFromUpdate(1,3,4)
-                .setFieldAsLookup(1, tblKatRef.getTableList(), List.of(6,1), List.of(0,1))
-                .makeFieldsHidden(0,6);
+                .setFieldAsLookup(1, tblKatRef.getTableList(), JMFunctions.listIntegerOf(6,1), JMFunctions.listIntegerOf(0,1))
+                .makeFieldsHidden(0,6)
+                .setAllowPrint(false);
         this.tblList.pack();
     }
     public void show(){
